@@ -83,7 +83,7 @@
           Start earning money by running this service.
           <a
             href="#"
-            @click.prevent="bountyRegistrationForm">Register to bounty program</a>.
+            @click.prevent="bountyRegistrationForm">Register to bounty pilot</a>.
         </p>
       </div>
 
@@ -417,7 +417,7 @@ export default {
     },
 
     bountyRegistrationForm () {
-      shell.openExternal('https://mysteriumnetwork.typeform.com/to/Z4rbwr')
+      shell.openExternal('https://my.mysterium.network')
     },
 
     getProviderStatsLink (providerId, serviceType) {
