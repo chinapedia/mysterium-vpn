@@ -8179,10 +8179,10 @@ mysterium-client-bin@0.13.2:
     follow-redirects "^1.5.2"
     targz "^1.0.1"
 
-mysterium-vpn-js@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/mysterium-vpn-js/-/mysterium-vpn-js-1.0.8.tgz#0b9a1b96be8e4f7d3acdec7bf637ec1d2faaf382"
-  integrity sha512-n2K3f2JgfezpfPMZvgzbyuZ83j62DnBDub7enep7BeYLaa7HousPTaSxoTQ5Bptr2ujsVFyf73i1VzEl2MclQw==
+mysterium-vpn-js@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/mysterium-vpn-js/-/mysterium-vpn-js-1.0.9.tgz#f320d1a8376b52f54707a3f64843f24681396ce5"
+  integrity sha512-RvL/nf7GpGJCAsa9vZ2hGwPhsyQG5FZMqghAvnj4apU3mJnTpjdGPYkSjiqaTyzjCpuk5ZmA5ma390WmdWwJ1w==
   dependencies:
     axios "^0.19.0"
     filesize "^5.0.0"

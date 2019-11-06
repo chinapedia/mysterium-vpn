@@ -23,7 +23,7 @@ import type { Subscriber } from '../../libraries/publisher'
 import Publisher from '../../libraries/publisher'
 import type { ProposalFetcher } from './proposal-fetcher'
 
-const proposalsQueryWithMetric: ProposalQuery = { fetchConnectCounts: true }
+const proposalsQueryWithMetric: ProposalQuery = { fetchConnectCounts: true, accessPolicy: '*' }
 
 class TequilapiProposalFetcher implements ProposalFetcher {
   _api: TequilapiClient

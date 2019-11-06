@@ -26,7 +26,9 @@ import {
   IdentityPayout,
   AccessPolicy,
   NatStatusResponse,
-  TIMEOUT_DISABLED
+  parseProposalList,
+  TIMEOUT_DISABLED,
+  TEQUILAPI_URL
 } from 'mysterium-vpn-js'
 import type {
   Identity,
@@ -40,6 +42,7 @@ import type {
   ConsumerLocation,
   IdentityRegistration
 } from 'mysterium-vpn-js'
+import axios from 'axios'
 import type { BugReporterMetrics } from './metrics/bug-reporter-metrics'
 import { METRICS } from './metrics/metrics'
 import { Config } from 'mysterium-vpn-js/lib/config/config'
@@ -105,7 +108,13 @@ class TequilapiClientWithMetrics implements TequilapiClient {
   }
 
   async findProposals (query?: ProposalQuery): Promise<Array<Proposal>> {
-    const result = await this._client.findProposals(query)
+    const result = await axios.get(`${TEQUILAPI_URL}/proposals`, { params: query })
+      .then(res => parseProposalList(res.data))
+      .then(data => data.proposals.filter((p: Proposal) => {
+        const applicableServiceType = p.serviceType === 'openvpn'
+        const withoutWhitelistPolicy = !p.accessPolicies
+        return applicableServiceType && withoutWhitelistPolicy
+      }))
     if (!result || result.length === 0) {
       this._bugReporterMetrics.set(METRICS.PROPOSALS_FETCHED_ONCE, false)
     } else {
