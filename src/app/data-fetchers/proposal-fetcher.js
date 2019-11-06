@@ -18,11 +18,11 @@
 // @flow
 
 import type { Subscriber } from '../../libraries/publisher'
-import type { ProposalDTO } from 'mysterium-tequilapi/lib/dto/proposal'
+import type { Proposal } from 'mysterium-vpn-js'
 
 interface ProposalFetcher {
-  fetch(showMore: boolean): Promise<ProposalDTO[]>,
-  onFetchedProposals(Subscriber<ProposalDTO[]>): void
+  fetch(showMore: boolean): Promise<Proposal[]>,
+  onFetchedProposals(Subscriber<Proposal[]>): void
 }
 
 export type { ProposalFetcher }

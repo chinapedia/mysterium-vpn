@@ -17,7 +17,7 @@
 
 // @flow
 
-import { TequilapiClient } from 'mysterium-tequilapi/lib/client'
+import { TequilapiClient } from 'mysterium-vpn-js'
 import logger from '../../app/logger'
 
 class VersionCheck {

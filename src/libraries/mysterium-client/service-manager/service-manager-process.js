@@ -19,7 +19,7 @@
 
 import logger from '../../../app/logger'
 import type { LogCallback, Process } from '../index'
-import type { TequilapiClient } from 'mysterium-tequilapi/lib/client'
+import type { TequilapiClient } from 'mysterium-vpn-js'
 import type { System } from '../system'
 import ClientLogPublisher from '../client-log-publisher'
 import { HEALTH_CHECK_INTERVAL } from '../monitoring/monitoring'

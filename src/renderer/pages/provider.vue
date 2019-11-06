@@ -41,9 +41,9 @@
         </div>
         <div
           class="nat-status"
-          v-if="NATStatus">
+          v-if="NatStatus">
           Automatic NAT traversal:
-          <span v-html="NATStatusHtml"/>
+          <span v-html="NatStatusHtml"/>
           <a
             class="nat-link"
             href="#"
@@ -133,8 +133,7 @@ import type from '../store/types'
 import { mapMutations, mapGetters } from 'vuex'
 import AppError from '../partials/app-error'
 import Tabs from '../components/tabs'
-import { ServiceStatus } from 'mysterium-vpn-js/lib/models/service-status'
-import { NATStatus } from 'mysterium-tequilapi/lib/dto/nat-status'
+import { NatStatus, ServiceStatus } from 'mysterium-vpn-js'
 import logger from '../../app/logger'
 import Identity from '../components/identity'
 import AppModal from '../partials/app-modal'
@@ -172,8 +171,8 @@ export default {
         title: 'Whitelisted traffic',
         description: 'When you choose to run this traffic you can rest assured that it’s not coming from the dark web.'
       },
-      NATStatus: null,
-      NATStatusInterval: null
+      NatStatus: null,
+      NatStatusInterval: null
     }
   },
   async mounted () {
@@ -204,11 +203,11 @@ export default {
       }
 
       if (newStatus === ServiceStatus.RUNNING) {
-        this.startNATStatusFetching()
+        this.startNatStatusFetching()
         return
       }
 
-      this.stopNATStatusFetching()
+      this.stopNatStatusFetching()
     }
   },
   computed: {
@@ -224,18 +223,18 @@ export default {
       }
     },
     showNATLink () {
-      const status = this.NATStatus.status || null
+      const status = this.NatStatus.status || null
 
-      return status === NATStatus.FAILED || status === NATStatus.NOT_FINISHED
+      return status === NatStatus.FAILED || status === NatStatus.NOT_FINISHED
     },
-    NATStatusHtml () {
-      const status = this.NATStatus.status || null
+    NatStatusHtml () {
+      const status = this.NatStatus.status || null
       switch (status) {
-        case NATStatus.SUCCESSFUL:
+        case NatStatus.SUCCESSFUL:
           return '<span class="text-success">Success</span>'
-        case NATStatus.FAILED:
+        case NatStatus.FAILED:
           return '<span class="text-failed">Failed</span>'
-        case NATStatus.NOT_FINISHED:
+        case NatStatus.NOT_FINISHED:
           return '<span class="text-warning">In progress</span>'
       }
     },
@@ -424,12 +423,12 @@ export default {
       return this.providerConfig.baseURL + '/node/' + providerId + '/' + serviceType
     },
 
-    startNATStatusFetching () {
+    startNatStatusFetching () {
       const fetch = async () => {
         try {
-          const status = await this.tequilapiClient.natStatus()
+          const status = await this.tequilapiClient.NatStatus()
 
-          this.NATStatus = status
+          this.NatStatus = status
         } catch (e) {
           logger.error('Failed fetching NAT status', e)
         }
@@ -437,13 +436,13 @@ export default {
 
       fetch()
 
-      this.NATStatusInterval = setInterval(fetch, 3000)
+      this.NatStatusInterval = setInterval(fetch, 3000)
     },
 
-    stopNATStatusFetching () {
-      this.NATStatus = null
+    stopNatStatusFetching () {
+      this.NatStatus = null
 
-      clearInterval(this.NATStatusInterval)
+      clearInterval(this.NatStatusInterval)
     },
 
     startAccessPolicyFetching () {

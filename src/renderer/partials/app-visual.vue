@@ -50,7 +50,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
+import { ConnectionStatus } from 'mysterium-vpn-js'
 
 import headVisual from '@/assets/img/visual--head.svg'
 

@@ -18,7 +18,7 @@
 // @flow
 
 import type { StatusNotifier } from './status-notifier'
-import type { TequilapiClient } from 'mysterium-tequilapi/lib/client'
+import type { TequilapiClient } from 'mysterium-vpn-js'
 import Publisher from '../../publisher'
 import type { StatusCallback } from './monitoring'
 import { HEALTH_CHECK_INTERVAL } from './monitoring'

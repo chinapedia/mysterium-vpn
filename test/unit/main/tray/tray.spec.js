@@ -18,7 +18,7 @@
 import translations from '../../../../src/main/tray/translations'
 import Tray from '../../../../src/main/tray/tray'
 import { expect } from '../../../helpers/dependencies'
-import { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
+import { ConnectionStatus } from 'mysterium-vpn-js'
 
 describe('tray', () => {
   describe('Tray', () => {

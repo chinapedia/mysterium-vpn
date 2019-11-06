@@ -17,20 +17,18 @@
 
 // @flow
 
-import type { ProposalDTO } from 'mysterium-tequilapi/lib/dto/proposal'
-import type { ProposalQueryOptions } from 'mysterium-tequilapi/lib/dto/query/proposals-query-options'
-import type { TequilapiClient } from 'mysterium-tequilapi/lib/client'
+import type { Proposal, ProposalQuery, TequilapiClient } from 'mysterium-vpn-js'
 import { FunctionLooper } from '../../libraries/function-looper'
 import type { Subscriber } from '../../libraries/publisher'
 import Publisher from '../../libraries/publisher'
 import type { ProposalFetcher } from './proposal-fetcher'
 
-const proposalsQueryWithMetric: ProposalQueryOptions = { fetchConnectCounts: true }
+const proposalsQueryWithMetric: ProposalQuery = { fetchConnectCounts: true }
 
 class TequilapiProposalFetcher implements ProposalFetcher {
   _api: TequilapiClient
   _loop: FunctionLooper
-  _proposalPublisher: Publisher<ProposalDTO[]> = new Publisher()
+  _proposalPublisher: Publisher<Proposal[]> = new Publisher()
   _errorPublisher: Publisher<Error> = new Publisher()
 
   constructor (api: TequilapiClient, interval: number = 5000) {
@@ -55,7 +53,7 @@ class TequilapiProposalFetcher implements ProposalFetcher {
   /**
    * Forces proposals to be fetched without delaying.
    */
-  async fetch (): Promise<ProposalDTO[]> {
+  async fetch (): Promise<Proposal[]> {
     const proposals = await this._api.findProposals(proposalsQueryWithMetric)
 
     this._proposalPublisher.publish(proposals)
@@ -67,7 +65,7 @@ class TequilapiProposalFetcher implements ProposalFetcher {
     await this._loop.stop()
   }
 
-  onFetchedProposals (subscriber: Subscriber<ProposalDTO[]>): void {
+  onFetchedProposals (subscriber: Subscriber<Proposal[]>): void {
     this._proposalPublisher.addSubscriber(subscriber)
   }
 

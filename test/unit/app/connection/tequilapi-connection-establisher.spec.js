@@ -18,10 +18,10 @@
 // @flow
 
 import { beforeEach, describe, expect, it } from '../../../helpers/dependencies'
-import { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
+import { ConnectionStatus } from 'mysterium-vpn-js'
+import type { ConsumerLocation } from 'mysterium-vpn-js'
 import MockEventSender from '../../../helpers/statistics/mock-event-sender'
 import BugReporterMock from '../../../helpers/bug-reporter-mock'
-import type { ConsumerLocationDTO } from 'mysterium-tequilapi/lib/dto/consumer-location'
 import factoryTequilapiManipulator from '../../../helpers/mysterium-tequilapi/factory-tequilapi-manipulator'
 import TequilapiConnectionEstablisher from '../../../../src/app/connection/tequilapi-connection-establisher'
 import type { ErrorMessage } from '../../../../src/app/connection/error-message'
@@ -32,7 +32,7 @@ import type { Provider } from '../../../../src/app/connection/provider'
 import messages from '../../../../src/app/messages'
 
 class MockConnectionState implements ConnectionState {
-  connectionStatus: ?ConnectionStatus = null
+  connectionStatus: ?$Values<typeof ConnectionStatus> = null
   statisticsReset: boolean = false
   lastConnectionProvider: Provider
 
@@ -40,7 +40,7 @@ class MockConnectionState implements ConnectionState {
     this.lastConnectionProvider = provider
   }
 
-  async setConnectionStatus (status: ConnectionStatus) {
+  async setConnectionStatus (status: $Values<typeof ConnectionStatus>) {
     this.connectionStatus = status
   }
 
@@ -80,9 +80,9 @@ describe('TequilapiConnectionEstablisher', () => {
   let mockConnectionState: MockConnectionState
   let mockErrorMessage: MockErrorMessage
 
-  const location: ConsumerLocationDTO = {
+  const location: ConsumerLocation = {
     country: 'lt',
-    asn: '123'
+    asn: 123
   }
   const actionLooper: ?FunctionLooper = null
 

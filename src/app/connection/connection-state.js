@@ -17,11 +17,11 @@
 
 // @flow
 
-import type { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
+import { ConnectionStatus } from 'mysterium-vpn-js'
 import type { Provider } from './provider'
 
 interface ConnectionState {
-  setConnectionStatus (status: ConnectionStatus): Promise<void>,
+  setConnectionStatus (status: $Values<typeof ConnectionStatus>): Promise<void>,
   setLastConnectionProvider (provider: Provider): void,
   resetStatistics (): void,
 }

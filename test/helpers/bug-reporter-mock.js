@@ -18,7 +18,7 @@
 // @flow
 
 import type { BugReporter } from '../../src/app/bug-reporting/interface'
-import type { IdentityDTO } from 'mysterium-tequilapi/lib/dto/identity'
+import type { Identity } from 'mysterium-vpn-js'
 
 type ErrorCapture = {
   error: Error,
@@ -31,14 +31,14 @@ type StringCapture = {
 }
 
 class BugReporterMock implements BugReporter {
-  identity: IdentityDTO
+  identity: Identity
 
   errorMessages: Array<StringCapture> = []
   infoMessages: Array<StringCapture> = []
   errorExceptions: Array<ErrorCapture> = []
   infoExceptions: Array<ErrorCapture> = []
 
-  setUser (identity: IdentityDTO): void {
+  setUser (identity: Identity): void {
     this.identity = identity
   }
 

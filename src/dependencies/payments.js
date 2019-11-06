@@ -17,9 +17,8 @@
 
 // @flow
 import type { Container } from '../app/di'
-import { getPaymentLink } from 'mysterium-tequilapi/lib/dto/identity-registration/get-payment-link'
-import type { PublicKeyDTO } from 'mysterium-tequilapi/lib/dto/identity-registration/public-key'
-import type { SignatureDTO } from 'mysterium-tequilapi/lib/dto/identity-registration/signature'
+import { getPaymentLink } from 'mysterium-vpn-js'
+import type { PublicKey, Signature } from 'mysterium-vpn-js'
 
 function bootstrap (container: Container) {
   container.constant(
@@ -33,7 +32,7 @@ function bootstrap (container: Container) {
     'getPaymentLink',
     ['paymentBaseUrl'],
     (paymentBaseUrl: string) =>
-      (publicKey: PublicKeyDTO, signature: SignatureDTO) => {
+      (publicKey: PublicKey, signature: Signature) => {
         // TODO: require only IdentityProof once mysterium-tequilapi exposes it
         return getPaymentLink(paymentBaseUrl, { publicKey, signature })
       }

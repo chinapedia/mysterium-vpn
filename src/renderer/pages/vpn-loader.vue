@@ -25,7 +25,7 @@ import messages from '../../app/messages'
 import logger from '../../app/logger'
 import DelayedRetrier from '../../app/delayed-retrier'
 import config from '../config'
-import TequilapiError from 'mysterium-tequilapi/lib/tequilapi-error'
+import { TequilapiError } from 'mysterium-vpn-js'
 
 export default {
   dependencies: ['bugReporter', 'vpnInitializer', 'sleeper', 'tequilapiClient', 'identityManager'],

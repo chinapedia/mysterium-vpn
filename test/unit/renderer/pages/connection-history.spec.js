@@ -21,7 +21,7 @@ import { beforeEach, describe, it, expect } from '../../../helpers/dependencies'
 import ConnectionHistory from '../../../../src/renderer/pages/connection-history'
 import DIContainer from '../../../../src/app/di/vue-container'
 import VueRouter from 'vue-router'
-import { ConnectionSessionDTO } from 'mysterium-tequilapi/lib/dto/connection-session'
+import { ConnectionSession } from 'mysterium-vpn-js'
 import { TimeFormatter } from '../../../../src/libraries/formatters/time-formatter'
 import { DurationFormatter } from '../../../../src/libraries/formatters/duration-formatter'
 import { BytesFormatter } from '../../../../src/libraries/formatters/bytes-formatter'
@@ -29,7 +29,7 @@ import { BytesFormatter } from '../../../../src/libraries/formatters/bytes-forma
 describe('ConnectionHistory', () => {
   let wrapper
 
-  const mockedSessions: ConnectionSessionDTO[] = [
+  const mockedSessions: ConnectionSession[] = [
     {
       sessionId: '5fefd260-c096-11e8-b371-ebde26989839',
       providerId: '0x3b03a513fba4bd4868edd340f77da0c920150f3e',

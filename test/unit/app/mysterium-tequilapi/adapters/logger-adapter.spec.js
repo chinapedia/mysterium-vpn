@@ -19,12 +19,12 @@
 
 import { beforeEach, describe, expect, it } from '../../../../helpers/dependencies'
 import LoggerAdapter from '../../../../../src/app/mysterium-tequilapi/adapters/logger-adapter'
-import type { HttpInterface } from 'mysterium-tequilapi/lib/adapters/interface'
+import type { HttpInterface } from 'mysterium-vpn-js'
+import { HttpQuery } from 'mysterium-vpn-js'
 import MockHttpAdapter from '../../../../helpers/adapters/MockHttpAdapter'
 import type { StringLogger } from '../../../../../src/app/logging/string-logger'
 import { Logger } from '../../../../../src/app/logger'
 import { captureAsyncError } from '../../../../helpers/utils'
-import { HttpQueryParams } from 'mysterium-tequilapi/lib/adapters/interface'
 
 class MockStringLogger implements StringLogger {
   logs: {level: string, message: string}[] = []
@@ -69,7 +69,7 @@ describe('LoggerAdapter', () => {
     it('delegates call to passed adapter', async () => {
       const mockResponse = 'hello'
       mockAdapter.mockResponse = mockResponse
-      const query: HttpQueryParams = ({ key: 'value' }: { [string]: any })
+      const query: HttpQuery = ({ key: 'value' }: { [string]: any })
       const response = await adapter.get('path', query, 5)
       expect(response).to.eql(mockResponse)
 

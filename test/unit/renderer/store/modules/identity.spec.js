@@ -22,7 +22,7 @@ import { beforeEach, describe, expect, it } from '../../../../helpers/dependenci
 import factory from '../../../../../src/renderer/store/modules/identity'
 import type { State } from '../../../../../src/renderer/store/modules/identity'
 import types from '../../../../../src/renderer/store/types'
-import type { IdentityRegistrationDTO } from 'mysterium-tequilapi/lib/dto/identity-registration/identity-registration'
+import type { IdentityRegistration } from 'mysterium-vpn-js'
 import IdentityManager from '../../../../../src/app/identity-manager'
 import EmptyTequilapiClientMock from './empty-tequilapi-client-mock'
 import { createLocalVue } from '@vue/test-utils'
@@ -73,7 +73,7 @@ describe('identity store', () => {
           current: null,
           registration: null
         }
-        const registration: IdentityRegistrationDTO = { registered: true }
+        const registration: IdentityRegistration = { registered: true }
         mutations[types.SET_IDENTITY_REGISTRATION](state, registration)
         expect(state.registration).to.eql(registration)
       })

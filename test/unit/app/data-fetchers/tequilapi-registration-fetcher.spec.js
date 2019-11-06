@@ -21,11 +21,11 @@ import lolex from 'lolex'
 import { capturePromiseError, nextTick } from '../../../helpers/utils'
 import EmptyTequilapiClientMock from '../../renderer/store/modules/empty-tequilapi-client-mock'
 import logger from '../../../../src/app/logger'
-import type { IdentityRegistrationDTO } from 'mysterium-tequilapi/lib/dto/identity-registration/identity-registration'
+import type { IdentityRegistration } from 'mysterium-vpn-js'
 import TequilapiRegistrationFetcher from '../../../../src/app/data-fetchers/tequilapi-registration-fetcher'
 
 const IDENTITY_ID = 'identity-id-123'
-const REGISTRATION: IdentityRegistrationDTO = {
+const REGISTRATION: IdentityRegistration = {
   registered: true,
   publicKey: {
     part1: '0xfb22c62ed2ddc65eb2994a8af5b1094b239aacc04a6505fd2bc581f55547175a',
@@ -40,15 +40,15 @@ const REGISTRATION: IdentityRegistrationDTO = {
 
 class IdentityTequilapiClientMock extends EmptyTequilapiClientMock {
   mockError: Error = new Error('Mock error')
-  _registration: IdentityRegistrationDTO
+  _registration: IdentityRegistration
   _willFail: boolean = false
 
-  constructor (registration: IdentityRegistrationDTO) {
+  constructor (registration: IdentityRegistration) {
     super()
     this._registration = registration
   }
 
-  async identityRegistration (id: string): Promise<IdentityRegistrationDTO> {
+  async identityRegistration (id: string): Promise<IdentityRegistration> {
     if (!id) throw new Error('some tequilapi error here')
     if (this._willFail) {
       throw this.mockError

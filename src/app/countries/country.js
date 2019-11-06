@@ -25,7 +25,7 @@ type Country = {
   name: string,
   isFavorite: boolean,
   quality: number | null,
-  qualityLevel: QualityLevel
+  qualityLevel: $Values<typeof QualityLevel>
 }
 
 export type { Country }

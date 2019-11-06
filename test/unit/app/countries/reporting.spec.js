@@ -20,32 +20,30 @@
 import { describe, expect, it } from '../../../helpers/dependencies'
 import TequilapiProposalFetcher from '../../../../src/app/data-fetchers/tequilapi-proposal-fetcher'
 import EmptyTequilapiClientMock from '../../renderer/store/modules/empty-tequilapi-client-mock'
-import { ServiceDefinitionDTO } from 'mysterium-tequilapi/lib/dto/service-definition'
-import { LocationDTO } from 'mysterium-tequilapi/lib/dto/location'
-import { ProposalDTO } from 'mysterium-tequilapi/lib/dto/proposal'
+import { ServiceDefinition, Location, Proposal } from 'mysterium-vpn-js'
 import { reportUnknownProposalCountries } from '../../../../src/app/countries/reporting'
 import BugReporterMock from '../../../helpers/bug-reporter-mock'
 
 class ProposalsTequilapiClientMock extends EmptyTequilapiClientMock {
-  _mockProposals: ProposalDTO[]
+  _mockProposals: Proposal[]
 
-  constructor (mockProposals: ProposalDTO[]) {
+  constructor (mockProposals: Proposal[]) {
     super()
     this._mockProposals = mockProposals
   }
 
-  async findProposals (query): Promise<ProposalDTO[]> {
+  async findProposals (query): Promise<Proposal[]> {
     return this._mockProposals
   }
 }
 
 describe('.reportUnknownProposalCountries', () => {
   it('listens for new proposals and reports unknown countries', async () => {
-    function countryProposal (country?: ?string): ProposalDTO {
-      let serviceDefinition: ServiceDefinitionDTO = { locationOriginate: {} }
+    function countryProposal (country?: ?string): Proposal {
+      let serviceDefinition: ServiceDefinition = { locationOriginate: {} }
 
       if (typeof country !== 'undefined' && country !== null) {
-        const locationOriginate: LocationDTO = { country }
+        const locationOriginate: Location = { country }
 
         serviceDefinition = { locationOriginate: locationOriginate }
       }

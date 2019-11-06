@@ -18,8 +18,7 @@
 // @flow
 
 import type { Container } from '../../../app/di'
-import { ProviderService } from 'mysterium-vpn-js/lib/domain/provider-service'
-import { ProviderSessions } from 'mysterium-vpn-js/lib/domain/provider-sessions'
+import { ProviderService, ProviderSessions } from 'mysterium-vpn-js'
 
 export default function bootstrap (container: Container) {
   container.constant('providerConfig', {

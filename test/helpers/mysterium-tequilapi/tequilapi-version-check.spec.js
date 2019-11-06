@@ -18,7 +18,7 @@
 // @flow
 
 import EmptyTequilapiClientMock from '../../unit/renderer/store/modules/empty-tequilapi-client-mock'
-import type { NodeHealthcheckDTO } from 'mysterium-tequilapi/lib/dto/node-healthcheck'
+import type { NodeHealthcheck } from 'mysterium-vpn-js'
 
 class TequilapiVersionMock extends EmptyTequilapiClientMock {
   versionMock: string
@@ -28,7 +28,7 @@ class TequilapiVersionMock extends EmptyTequilapiClientMock {
     this.versionMock = versionMock
   }
 
-  async healthCheck (_timeout: ?number): Promise<NodeHealthcheckDTO> {
+  async healthCheck (_timeout: ?number): Promise<NodeHealthcheck> {
     return {
       uptime: '',
       process: 0,

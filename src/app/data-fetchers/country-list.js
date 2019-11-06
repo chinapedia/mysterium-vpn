@@ -19,7 +19,7 @@
 import type { Country } from '../countries/country'
 import Publisher from '../../libraries/publisher'
 import { getSortedCountryListFromProposals } from '../countries/parsing'
-import type { ProposalDTO } from 'mysterium-tequilapi/lib/dto/proposal'
+import type { Proposal } from 'mysterium-vpn-js'
 import type { Subscriber } from '../../libraries/publisher'
 import type { FavoriteProviders } from '../user-settings/user-settings'
 import type { ProposalFetcher } from './proposal-fetcher'
@@ -31,7 +31,7 @@ class CountryList {
   _userSettingsStore: UserSettingsStore
   _publisher: Publisher<Array<Country>> = new Publisher()
 
-  _proposals: ProposalDTO[] = []
+  _proposals: Proposal[] = []
   _favorites: FavoriteProviders = new Set()
 
   constructor (proposalFetcher: ProposalFetcher, store: UserSettingsStore) {
@@ -57,7 +57,7 @@ class CountryList {
   }
 
   _subscribeToProposalFetches () {
-    this._proposalFetcher.onFetchedProposals((proposals: ProposalDTO[]) => {
+    this._proposalFetcher.onFetchedProposals((proposals: Proposal[]) => {
       this._proposals = proposals
       this._notify()
     })

@@ -1,6 +1,11 @@
 [ignore]
 .*/mysterium-tequilapi/node_modules/.*
 .*/mysterium-tequilapi/test/.*
+.*/mysterium-vpn-js/lib/provider/service-info.js.flow
+.*/mysterium-vpn-js/lib/tequilapi-error.js.flow
+.*/mysterium-vpn-js/lib/tequilapi-client.js.flow
+.*/mysterium-vpn-js/lib/provider/provider-service.js.flow
+.*/mysterium-vpn-js/lib/http/axios-adapter.js.flow
 
 [include]
 

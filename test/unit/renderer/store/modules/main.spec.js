@@ -22,7 +22,7 @@ import type from '@/store/types'
 import EmptyTequilapiClientMock from './empty-tequilapi-client-mock'
 import { beforeEach, describe, it } from '../../../../helpers/dependencies'
 import { CallbackRecorder } from '../../../../helpers/utils'
-import type { NodeHealthcheckDTO } from 'mysterium-tequilapi/lib/dto/node-healthcheck'
+import type { NodeHealthcheck } from 'mysterium-vpn-js'
 import type { State } from '../../../../../src/renderer/store/modules/main'
 import factory from '../../../../../src/renderer/store/modules/main'
 import MockEventSender from '../../../../helpers/statistics/mock-event-sender'
@@ -42,7 +42,7 @@ function initialState (): State {
 }
 
 class MainTequilapiClientMock extends EmptyTequilapiClientMock {
-  async healthCheck (_timeout: ?number): Promise<NodeHealthcheckDTO> {
+  async healthCheck (_timeout: ?number): Promise<NodeHealthcheck> {
     return {
       uptime: '',
       process: 0,

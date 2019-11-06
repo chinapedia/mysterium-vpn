@@ -20,13 +20,13 @@
 import { expect } from 'chai'
 import IdentityManager from '../../../src/app/identity-manager'
 import EmptyTequilapiClientMock from '../renderer/store/modules/empty-tequilapi-client-mock'
-import { IdentityPayoutDTO } from 'mysterium-tequilapi/lib/dto/identity-payout'
+import { IdentityPayout } from 'mysterium-vpn-js'
 import { captureAsyncError } from '../../helpers/utils'
 
 class IdentityTequilapiClientMock extends EmptyTequilapiClientMock {
-  mockIdentityPayout: IdentityPayoutDTO
+  mockIdentityPayout: IdentityPayout
 
-  async identityPayout (id: string): Promise<IdentityPayoutDTO> {
+  async identityPayout (id: string): Promise<IdentityPayout> {
     return this.mockIdentityPayout
   }
 
@@ -40,7 +40,7 @@ describe('IdentityManager', () => {
 
   beforeEach(() => {
     tequilapiClient = new IdentityTequilapiClientMock()
-    tequilapiClient.mockIdentityPayout = { ethAddress: 'mock address' }
+    tequilapiClient.mockIdentityPayout = { ethAddress: 'mock address', email: '', referralCode: '' }
     manager = new IdentityManager(tequilapiClient)
   })
 
@@ -51,7 +51,7 @@ describe('IdentityManager', () => {
     })
 
     it('throws error when fetching without unlocking identity', async () => {
-      tequilapiClient.mockIdentityPayout = { ethAddress: 'mock address' }
+      tequilapiClient.mockIdentityPayout = { ethAddress: 'mock address', email: '', referralCode: '' }
       const err = await captureAsyncError(() => manager.fetchEthAddress())
       if (!(err instanceof Error)) {
         throw new Error('Expected error')

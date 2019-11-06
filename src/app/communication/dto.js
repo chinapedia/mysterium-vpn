@@ -16,14 +16,14 @@
  */
 
 // @flow
-import type { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
+import { ConnectionStatus } from 'mysterium-vpn-js'
 import type { LogLevel } from '../logging/mysterium-vpn-log-levels'
 import type { Country } from '../countries/country'
 import type { Metric } from '../bug-reporting/metrics/metrics'
 
 export type ConnectionStatusChangeDTO = {
-  oldStatus: ConnectionStatus,
-  newStatus: ConnectionStatus
+  oldStatus: $Values<typeof ConnectionStatus>,
+  newStatus: $Values<typeof ConnectionStatus>
 }
 
 export type CurrentIdentityChangeDTO = {

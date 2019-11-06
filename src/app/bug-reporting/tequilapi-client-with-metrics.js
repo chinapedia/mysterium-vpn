@@ -17,27 +17,33 @@
 
 // @flow
 
-import type { ConnectionStatusDTO } from 'mysterium-tequilapi/lib/dto/connection-status-dto'
-import type { NodeHealthcheckDTO } from 'mysterium-tequilapi/lib/dto/node-healthcheck'
-import type { ProposalDTO } from 'mysterium-tequilapi/lib/dto/proposal'
-import type { ProposalQueryOptions } from 'mysterium-tequilapi/lib/dto/query/proposals-query-options'
-import { TIMEOUT_DISABLED } from 'mysterium-tequilapi/lib/timeouts'
-import type { ConnectionRequest } from 'mysterium-tequilapi/lib/dto/query/connection-request'
-import type { ConnectionStatisticsDTO } from 'mysterium-tequilapi/lib/dto/connection-statistics'
-import type { ConnectionIPDTO } from 'mysterium-tequilapi/lib/dto/connection-ip'
-import { TequilapiClient } from 'mysterium-tequilapi/lib/client'
-import type { IdentityDTO } from 'mysterium-tequilapi/lib/dto/identity'
-import type { ConsumerLocationDTO } from 'mysterium-tequilapi/lib/dto/consumer-location'
-import type { IdentityRegistrationDTO } from 'mysterium-tequilapi/lib/dto/identity-registration/identity-registration'
+import {
+  TequilapiClient,
+  ConnectionSession,
+  ServiceSession,
+  ServiceInfo,
+  ServiceRequest,
+  IdentityPayout,
+  AccessPolicy,
+  NatStatusResponse,
+  TIMEOUT_DISABLED
+} from 'mysterium-vpn-js'
+import type {
+  Identity,
+  NodeHealthcheck,
+  Proposal,
+  ProposalQuery,
+  ConnectionRequest,
+  ConnectionStatistics,
+  ConnectionStatusResponse,
+  ConnectionIp,
+  ConsumerLocation,
+  IdentityRegistration
+} from 'mysterium-vpn-js'
 import type { BugReporterMetrics } from './metrics/bug-reporter-metrics'
 import { METRICS } from './metrics/metrics'
-import { ConnectionSessionDTO } from 'mysterium-tequilapi/lib/dto/connection-session'
-import { ServiceSessionDTO } from 'mysterium-tequilapi/lib/dto/service-session'
-import { ServiceInfoDTO } from 'mysterium-tequilapi/lib/dto/service-info'
-import { ServiceRequest } from 'mysterium-tequilapi/lib/dto/service-request'
-import { IdentityPayoutDTO } from 'mysterium-tequilapi/lib/dto/identity-payout'
-import { AccessPolicyDTO } from 'mysterium-tequilapi/lib/dto/access-policies'
-import { NatStatusDTO } from 'mysterium-tequilapi/lib/dto/nat-status-dto'
+import { Config } from 'mysterium-vpn-js/lib/config/config'
+import { Issue, IssueId } from 'mysterium-vpn-js/lib/feedback/issue'
 
 class TequilapiClientWithMetrics implements TequilapiClient {
   _bugReporterMetrics: BugReporterMetrics
@@ -52,15 +58,19 @@ class TequilapiClientWithMetrics implements TequilapiClient {
     return this._client.stop()
   }
 
-  async identitiesList (): Promise<Array<IdentityDTO>> {
-    return this._client.identitiesList()
+  async identityList (): Promise<Array<Identity>> {
+    return this._client.identityList()
   }
 
-  async identityCreate (passphrase: string): Promise<IdentityDTO> {
+  async identityCurrent (passphrase: string): Promise<Identity> {
+    return this._client.identityCurrent(passphrase)
+  }
+
+  async identityCreate (passphrase: string): Promise<Identity> {
     return this._client.identityCreate(passphrase)
   }
 
-  async healthCheck (timeout?: number): Promise<NodeHealthcheckDTO> {
+  async healthCheck (timeout?: number): Promise<NodeHealthcheck> {
     const result = await this._client.healthCheck(timeout)
     this._bugReporterMetrics.setWithCurrentDateTime(METRICS.HEALTH_CHECK_TIME)
     return result
@@ -72,13 +82,13 @@ class TequilapiClientWithMetrics implements TequilapiClient {
     this._bugReporterMetrics.set(METRICS.IDENTITY_UNLOCKED, true)
   }
 
-  async identityRegistration (id: string): Promise<IdentityRegistrationDTO> {
+  async identityRegistration (id: string): Promise<IdentityRegistration> {
     const result = await this._client.identityRegistration(id)
     this._bugReporterMetrics.set(METRICS.IDENTITY_REGISTERED, result.registered)
     return result
   }
 
-  async identityPayout (id: string): Promise<IdentityPayoutDTO> {
+  async identityPayout (id: string): Promise<IdentityPayout> {
     return this._client.identityPayout(id)
   }
 
@@ -86,7 +96,15 @@ class TequilapiClientWithMetrics implements TequilapiClient {
     return this._client.updateIdentityPayout(id, ethAddress)
   }
 
-  async findProposals (query?: ProposalQueryOptions): Promise<Array<ProposalDTO>> {
+  async updateEmail (id: string, email: string): Promise<void> {
+    return this._client.updateEmail(id, email)
+  }
+
+  async updateReferralCode (id: string, referralCode: string): Promise<void> {
+    return this._client.updateReferralCode(id, referralCode)
+  }
+
+  async findProposals (query?: ProposalQuery): Promise<Array<Proposal>> {
     const result = await this._client.findProposals(query)
     if (!result || result.length === 0) {
       this._bugReporterMetrics.set(METRICS.PROPOSALS_FETCHED_ONCE, false)
@@ -98,14 +116,14 @@ class TequilapiClientWithMetrics implements TequilapiClient {
 
   async connectionCreate (
     request: ConnectionRequest,
-    timeout?: number = TIMEOUT_DISABLED): Promise<ConnectionStatusDTO> {
+    timeout: number = TIMEOUT_DISABLED): Promise<ConnectionStatusResponse> {
     this._bugReporterMetrics.set(METRICS.CONNECTION_ACTIVE, false)
     const result = await this._client.connectionCreate(request, timeout)
     this._bugReporterMetrics.set(METRICS.CONNECTION_ACTIVE, true)
     return result
   }
 
-  async connectionStatus (): Promise<ConnectionStatusDTO> {
+  async connectionStatus (): Promise<ConnectionStatusResponse> {
     const result = await this._client.connectionStatus()
     this._bugReporterMetrics.set(METRICS.CONNECTION_STATUS, result)
     return result
@@ -116,35 +134,35 @@ class TequilapiClientWithMetrics implements TequilapiClient {
     this._bugReporterMetrics.set(METRICS.CONNECTION_ACTIVE, false)
   }
 
-  async connectionIP (timeout?: number): Promise<ConnectionIPDTO> {
-    const result = await this._client.connectionIP(timeout)
+  async connectionIp (timeout?: number): Promise<ConnectionIp> {
+    const result = await this._client.connectionIp(timeout)
     this._bugReporterMetrics.set(METRICS.CONNECTION_IP, result)
     return result
   }
 
-  async connectionStatistics (): Promise<ConnectionStatisticsDTO> {
+  async connectionStatistics (): Promise<ConnectionStatistics> {
     const result = await this._client.connectionStatistics()
     this._bugReporterMetrics.set(METRICS.CONNECTION_STATISTICS, result)
     return result
   }
 
-  async location (timeout?: number): Promise<ConsumerLocationDTO> {
+  async location (timeout?: number): Promise<ConsumerLocation> {
     return this._client.location(timeout)
   }
 
-  async connectionSessions (): Promise<ConnectionSessionDTO[]> {
+  async connectionSessions (): Promise<ConnectionSession[]> {
     return this._client.connectionSessions()
   }
 
-  async serviceList (): Promise<ServiceInfoDTO[]> {
+  async serviceList (): Promise<ServiceInfo[]> {
     return this._client.serviceList()
   }
 
-  async serviceGet (id: string): Promise<ServiceInfoDTO> {
+  async serviceGet (id: string): Promise<ServiceInfo> {
     return this._client.serviceGet(id)
   }
 
-  async serviceStart (request: ServiceRequest, timeout?: number | void): Promise<ServiceInfoDTO> {
+  async serviceStart (request: ServiceRequest, timeout?: number | void): Promise<ServiceInfo> {
     return this._client.serviceStart(request, timeout)
   }
 
@@ -152,16 +170,38 @@ class TequilapiClientWithMetrics implements TequilapiClient {
     return this._client.serviceStop(serviceId)
   }
 
-  async serviceSessions (): Promise<ServiceSessionDTO[]> {
+  async serviceSessions (): Promise<ServiceSession[]> {
     return this._client.serviceSessions()
   }
 
-  async accessPolicies (): Promise<AccessPolicyDTO[]> {
+  async accessPolicies (): Promise<AccessPolicy[]> {
     return this._client.accessPolicies()
   }
 
-  async natStatus (): Promise<NatStatusDTO> {
+  async natStatus (): Promise<NatStatusResponse> {
     return this._client.natStatus()
+  }
+
+  async userConfig (): Promise<Config> {
+    return {
+      data: {}
+    }
+  }
+
+  async updateUserConfig (config: Config): Promise<void> {
+    return this._client.updateUserConfig(config)
+  }
+
+  async authChangePassword (username: string, oldPassword: string, newPassword: string): Promise<void> {
+    return this._client.authChangePassword(username, oldPassword, newPassword)
+  }
+
+  async authLogin (username: string, password: string): Promise<void> {
+    return this._client.authLogin(username, password)
+  }
+
+  async reportIssue (issue: Issue): Promise<IssueId> {
+    return this._client.reportIssue(issue)
   }
 }
 

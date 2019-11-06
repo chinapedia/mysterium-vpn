@@ -19,7 +19,7 @@
 
 import VpnInitializer from '../../../src/app/vpn-initializer'
 import { beforeEach, describe, expect, it } from '../../helpers/dependencies'
-import type { IdentityDTO } from 'mysterium-tequilapi/lib/dto/identity'
+import type { Identity } from 'mysterium-vpn-js'
 import { capturePromiseError } from '../../helpers/utils'
 import IdentityManager from '../../../src/app/identity-manager'
 import messages from '../../../src/app/messages'
@@ -44,11 +44,11 @@ class MockTequilapiManipulator {
     return this._tequilapi
   }
 
-  tequilapiMockIdentitiesList (identities: Array<IdentityDTO>) {
-    this._tequilapi.identitiesList = () => Promise.resolve(identities)
+  tequilapiMockIdentitiesList (identities: Array<Identity>) {
+    this._tequilapi.identityList = () => Promise.resolve(identities)
   }
 
-  tequilapiMockIdentityCreate (identity: IdentityDTO) {
+  tequilapiMockIdentityCreate (identity: Identity) {
     this._tequilapi.identityCreate = () => Promise.resolve(identity)
   }
 
@@ -62,7 +62,7 @@ class MockTequilapiManipulator {
   }
 
   tequilapiMockIdentitiesListError (error: Error) {
-    this._tequilapi.identitiesList = () => Promise.reject(error)
+    this._tequilapi.identityList = () => Promise.reject(error)
   }
 
   tequilapiMockIdentityCreateError (error: Error) {
@@ -87,7 +87,7 @@ describe('VpnInitializer', () => {
     })
 
     describe('with some identities', () => {
-      const mockIdentity: IdentityDTO = { id: '0xC001FACE' }
+      const mockIdentity: Identity = { id: '0xC001FACE' }
 
       beforeEach(() => {
         tequilapiManipulator.tequilapiMockIdentitiesList([mockIdentity])
@@ -107,7 +107,7 @@ describe('VpnInitializer', () => {
     })
 
     describe('with no identities', () => {
-      const mockCreatedIdentity: IdentityDTO = { id: '0xC001FACY' }
+      const mockCreatedIdentity: Identity = { id: '0xC001FACY' }
       let identityUnlocked: boolean
 
       beforeEach(() => {

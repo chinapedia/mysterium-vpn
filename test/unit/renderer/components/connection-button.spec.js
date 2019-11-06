@@ -20,7 +20,7 @@
 import Vuex from 'vuex'
 import ConnectionButton from '../../../../src/renderer/components/connection-button'
 import type from '../../../../src/renderer/store/types'
-import { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
+import { ConnectionStatus } from 'mysterium-vpn-js'
 import connectionFactory from '@/store/modules/connection'
 import { createLocalVue, mount } from '@vue/test-utils'
 import { describe, expect, it } from '../../../helpers/dependencies'

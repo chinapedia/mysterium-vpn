@@ -18,8 +18,8 @@
 // @flow
 
 import type { CurrentIdentityChangeDTO } from './communication/dto'
-import type { IdentityDTO } from 'mysterium-tequilapi/lib/dto/identity'
-import { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
+import type { Identity } from 'mysterium-vpn-js'
+import { ConnectionStatus } from 'mysterium-vpn-js'
 import type { BugReporter } from './bug-reporting/interface'
 import StartupEventTracker from './statistics/startup-event-tracker'
 import Notification from './notification'
@@ -71,7 +71,7 @@ class CommunicationBindings {
 
   syncCurrentIdentityForBugReporter (bugReporter: BugReporter) {
     this._communication.currentIdentityChanged.on((identityChange: CurrentIdentityChangeDTO) => {
-      const identity: IdentityDTO = { id: identityChange.id }
+      const identity: Identity = { id: identityChange.id }
       bugReporter.setUser(identity)
     })
   }

@@ -18,11 +18,11 @@
 // @flow
 
 import type { Subscriber } from '../../libraries/publisher'
-import type { IdentityRegistrationDTO } from 'mysterium-tequilapi/lib/dto/identity-registration/identity-registration'
+import type { IdentityRegistration } from 'mysterium-vpn-js'
 
 interface RegistrationFetcher {
-  fetch(): Promise<IdentityRegistrationDTO>,
-  onFetchedRegistration(Subscriber<IdentityRegistrationDTO>): void
+  fetch(): Promise<IdentityRegistration>,
+  onFetchedRegistration(Subscriber<IdentityRegistration>): void
 }
 
 export type { RegistrationFetcher }

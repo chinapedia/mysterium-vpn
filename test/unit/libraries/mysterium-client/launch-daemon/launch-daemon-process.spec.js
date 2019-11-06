@@ -28,7 +28,7 @@ import { MockStatusNotifier } from '../../../../helpers/mysterium-client/monitor
 import { captureAsyncError, nextTick } from '../../../../helpers/utils'
 import Monitoring from '../../../../../src/libraries/mysterium-client/monitoring/monitoring'
 import VersionCheck from '../../../../../src/libraries/mysterium-client/version-check'
-import type { NodeHealthcheckDTO } from 'mysterium-tequilapi/lib/dto/node-healthcheck'
+import type { NodeHealthcheck } from 'mysterium-vpn-js'
 import lolex from 'lolex'
 import { TimeFormatter } from '../../../../../src/libraries/formatters/time-formatter'
 
@@ -40,7 +40,7 @@ class TequilapiClientMock extends EmptyTequilapiClientMock {
     this.stopped = true
   }
 
-  async healthCheck (_timeout: ?number): Promise<NodeHealthcheckDTO> {
+  async healthCheck (_timeout: ?number): Promise<NodeHealthcheck> {
     return {
       uptime: '',
       process: 0,

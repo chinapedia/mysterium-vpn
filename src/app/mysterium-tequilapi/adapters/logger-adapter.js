@@ -17,7 +17,7 @@
 
 // @flow
 
-import type { HttpInterface, HttpQueryParams } from 'mysterium-tequilapi/lib/adapters/interface'
+import type { HttpInterface, HttpQuery } from 'mysterium-vpn-js'
 import { Logger } from '../../logger'
 
 /**
@@ -32,7 +32,7 @@ class LoggerAdapter implements HttpInterface {
     this._adapter = adapter
   }
 
-  async get (path: string, query?: HttpQueryParams, timeout?: number): Promise<?any> {
+  async get (path: string, query?: HttpQuery, timeout?: number): Promise<?any> {
     const func = () => this._adapter.get(path, query, timeout)
     return this._captureHttpErrors(func)
   }

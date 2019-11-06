@@ -43,6 +43,7 @@ const winstonFormat = winston.format.combine(
 
 function createWinstonBaseLogger (logPath: string) {
   const filename = path.join(logPath, LOGS_FILENAME)
+  // $FlowFixMe
   return winston.createLogger({
     format: winstonFormat,
     transports: [
@@ -55,6 +56,7 @@ function createWinstonBaseLogger (logPath: string) {
 function createWinstonCachingLogger (logCache: LogCache, logPath: string): StringLogger {
   const winstonLogger = createWinstonBaseLogger(logPath)
   winstonLogger.add(new WinstonTransportCaching(logCache))
+  // $FlowFixMe
   return winstonLogger
 }
 
