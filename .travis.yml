@@ -52,7 +52,7 @@ jobs:
         - cp build/MysteriumVPN-*.dmg releases/MysteriumVPN.dmg
         # Windows
         - FORCE_DOWNLOAD=1 yarn download:bins:win
-        - yarn build:win
+        - DEBUG=electron-builder yarn build:win
         - cp build/MysteriumVPN\ Setup\ *.exe releases/MysteriumVPN.exe
       deploy:
         # Release (tags)
