@@ -16,29 +16,36 @@
  */
 
 // @flow
-import type { ConnectionIPDTO } from 'mysterium-tequilapi/lib/dto/connection-ip'
-import type { ConnectionStatusDTO } from 'mysterium-tequilapi/lib/dto/connection-status-dto'
-import type { ConnectionSessionDTO } from 'mysterium-tequilapi/lib/dto/connection-session'
-import type { ServiceSessionDTO } from 'mysterium-tequilapi/lib/dto/service-session'
-import type { ConnectionStatisticsDTO } from 'mysterium-tequilapi/lib/dto/connection-statistics'
-import { TequilapiClient } from 'mysterium-tequilapi/lib/client'
-import type { IdentityDTO } from 'mysterium-tequilapi/lib/dto/identity'
-import type { ProposalQueryOptions } from 'mysterium-tequilapi/lib/dto/query/proposals-query-options'
-import type { ProposalDTO } from 'mysterium-tequilapi/lib/dto/proposal'
-import type { ConsumerLocationDTO } from 'mysterium-tequilapi/lib/dto/consumer-location'
-import type { NodeHealthcheckDTO } from 'mysterium-tequilapi/lib/dto/node-healthcheck'
-import type { IdentityRegistrationDTO } from 'mysterium-tequilapi/lib/dto/identity-registration/identity-registration'
-import { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
-import { ServiceInfoDTO } from 'mysterium-tequilapi/lib/dto/service-info'
-import { ServiceRequest } from 'mysterium-tequilapi/lib/dto/service-request'
-import { ServiceStatus } from 'mysterium-tequilapi/lib/dto/service-status'
-import { parseProposalDTO } from 'mysterium-tequilapi/lib/dto/proposal'
-import { IdentityPayoutDTO } from 'mysterium-tequilapi/lib/dto/identity-payout'
-import { AccessPolicyDTO } from 'mysterium-tequilapi/lib/dto/access-policies'
-import { NatStatusDTO } from 'mysterium-tequilapi/lib/dto/nat-status-dto'
+import {
+  ConnectionStatus,
+  TequilapiClient,
+  ServiceInfo,
+  ServiceRequest,
+  ServiceStatus,
+  IdentityPayout,
+  AccessPolicy,
+  NatStatus,
+  parseProposal,
+  NatStatusResponse
+} from 'mysterium-vpn-js'
+import type {
+  ConnectionIp,
+  ConnectionSession,
+  ConnectionStatistics,
+  ConnectionStatusResponse,
+  ServiceSession,
+  Identity,
+  ProposalQuery,
+  Proposal,
+  ConsumerLocation,
+  NodeHealthcheck,
+  IdentityRegistration
+} from 'mysterium-vpn-js'
+import { Config } from 'mysterium-vpn-js/lib/config/config'
+import { Issue, IssueId } from 'mysterium-vpn-js/lib/feedback/issue'
 
 class EmptyTequilapiClientMock implements TequilapiClient {
-  async healthCheck (_timeout: ?number): Promise<NodeHealthcheckDTO> {
+  async healthCheck (_timeout: ?number): Promise<NodeHealthcheck> {
     return {
       uptime: '',
       process: 0,
@@ -54,48 +61,58 @@ class EmptyTequilapiClientMock implements TequilapiClient {
   async stop (): Promise<void> {
   }
 
-  async identitiesList (): Promise<Array<IdentityDTO>> {
+  async identityList (): Promise<Array<Identity>> {
     return []
   }
 
-  async identityCreate (passphrase: string): Promise<IdentityDTO> {
+  async identityCurrent (passphrase: string): Promise<Identity> {
+    return { id: 'mocked identity' }
+  }
+
+  async identityCreate (passphrase: string): Promise<Identity> {
     return { id: 'mocked identity' }
   }
 
   async identityUnlock (id: string, passphrase: string): Promise<void> {
   }
 
-  async identityRegistration (id: string): Promise<IdentityRegistrationDTO> {
+  async identityRegistration (id: string): Promise<IdentityRegistration> {
     return { registered: true }
   }
 
-  async identityPayout (id: string): Promise<IdentityPayoutDTO> {
-    return { ethAddress: 'mock eth address' }
+  async identityPayout (id: string): Promise<IdentityPayout> {
+    return { ethAddress: 'mock eth address', email: '', referralCode: '' }
   }
 
   async updateIdentityPayout (id: string, ethAddress: string): Promise<void> {
   }
 
-  async findProposals (query: ?ProposalQueryOptions): Promise<Array<ProposalDTO>> {
+  async updateEmail (id: string, email: string): Promise<void> {
+  }
+
+  async updateReferralCode (id: string, referralCode: string): Promise<void> {
+  }
+
+  async findProposals (query: ?ProposalQuery): Promise<Array<Proposal>> {
     return []
   }
 
-  async connectionCreate (): Promise<ConnectionStatusDTO> {
+  async connectionCreate (): Promise<ConnectionStatusResponse> {
     return { status: ConnectionStatus.CONNECTED }
   }
 
-  async connectionStatus (): Promise<ConnectionStatusDTO> {
+  async connectionStatus (): Promise<ConnectionStatusResponse> {
     return { status: ConnectionStatus.NOT_CONNECTED }
   }
 
   async connectionCancel (): Promise<void> {
   }
 
-  async connectionIP (): Promise<ConnectionIPDTO> {
+  async connectionIp (): Promise<ConnectionIp> {
     return {}
   }
 
-  async connectionStatistics (): Promise<ConnectionStatisticsDTO> {
+  async connectionStatistics (): Promise<ConnectionStatistics> {
     return {
       bytesSent: 0,
       bytesReceived: 0,
@@ -103,54 +120,75 @@ class EmptyTequilapiClientMock implements TequilapiClient {
     }
   }
 
-  async connectionSessions (): Promise<ConnectionSessionDTO[]> {
+  async connectionSessions (): Promise<ConnectionSession[]> {
     return []
   }
 
-  async location (): Promise<ConsumerLocationDTO> {
+  async location (): Promise<ConsumerLocation> {
     return {
-      asn: 'asd'
+      asn: 111
     }
   }
 
-  async serviceList (): Promise<ServiceInfoDTO[]> {
+  async serviceList (): Promise<ServiceInfo[]> {
     return []
   }
 
-  async serviceGet (id: string): Promise<ServiceInfoDTO> {
-    return buildServiceInfoDTO()
+  async serviceGet (id: string): Promise<ServiceInfo> {
+    return buildServiceInfo()
   }
 
-  async serviceStart (request: ServiceRequest, timeout?: number | void): Promise<ServiceInfoDTO> {
-    return buildServiceInfoDTO()
+  async serviceStart (request: ServiceRequest, timeout?: number | void): Promise<ServiceInfo> {
+    return buildServiceInfo()
   }
 
   async serviceStop (serviceId: string): Promise<void> {
   }
 
-  async serviceSessions (): Promise<ServiceSessionDTO[]> {
+  async serviceSessions (): Promise<ServiceSession[]> {
     return []
   }
 
-  async accessPolicies (): Promise<AccessPolicyDTO[]> {
+  async accessPolicies (): Promise<AccessPolicy[]> {
     return []
   }
 
-  async natStatus (): Promise<NatStatusDTO> {
+  async natStatus (): Promise<NatStatusResponse> {
     return {
-      status: ''
+      status: NatStatus.NOT_FINISHED
+    }
+  }
+
+  async userConfig (): Promise<Config> {
+    return {
+      data: {}
+    }
+  }
+
+  async updateUserConfig (config: Config): Promise<void> {
+  }
+
+  async authChangePassword (username: string, oldPassword: string, newPassword: string): Promise<void> {
+  }
+
+  async authLogin (username: string, password: string): Promise<void> {
+  }
+
+  async reportIssue (issue: Issue): Promise<IssueId> {
+    return {
+      issueId: '1'
     }
   }
 }
 
-const buildServiceInfoDTO = (): ServiceInfoDTO => {
+const buildServiceInfo = (): ServiceInfo => {
   const options: { [key: string]: any } = {}
 
   return {
     id: '123',
     providerId: '0x123',
     type: 'wireguard',
-    proposal: parseProposalDTO({
+    proposal: parseProposal({
       id: 1,
       providerId: '0x1',
       serviceType: 'mock',

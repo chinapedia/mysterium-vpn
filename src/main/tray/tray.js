@@ -20,9 +20,8 @@ import path from 'path'
 import { Tray as ElectronTray } from 'electron'
 import TrayMenuBuilder from './menu-builder'
 import translations from './translations'
-import { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
+import { ConnectionStatus, ServiceStatus } from 'mysterium-vpn-js'
 import type { Country } from '../../app/countries/country'
-import { ServiceStatus } from 'mysterium-vpn-js/lib/models/service-status'
 
 const TrayIcon = {
   active: 'active',
@@ -44,8 +43,8 @@ class Tray {
   _menuBuilder: TrayMenuBuilder
   _templateBuilder: Function
   _canUpdateItems: boolean = true
-  _vpnConnectionStatus: ConnectionStatus
-  _providerServiceStatus: ServiceStatus
+  _vpnConnectionStatus: $Values<typeof ConnectionStatus>
+  _providerServiceStatus: $Values<typeof ServiceStatus>
   _iconPath: string
 
   constructor (
@@ -84,7 +83,7 @@ class Tray {
     this._update()
   }
 
-  setVpnConnectionStatus (status: ConnectionStatus) {
+  setVpnConnectionStatus (status: $Values<typeof ConnectionStatus>) {
     if (this._vpnConnectionStatus === status) {
       return
     }
@@ -109,7 +108,7 @@ class Tray {
     this._update()
   }
 
-  setProviderServiceStatus (status: ServiceStatus) {
+  setProviderServiceStatus (status: $Values<typeof ServiceStatus>) {
     this._providerServiceStatus = status
     this._menuBuilder.updateProviderServiceStatus(status)
     this._update()

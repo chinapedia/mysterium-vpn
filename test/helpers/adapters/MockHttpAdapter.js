@@ -17,18 +17,18 @@
 
 // @flow
 
-import type { HttpInterface, HttpQueryParams } from 'mysterium-tequilapi/lib/adapters/interface'
+import type { HttpInterface, HttpQuery } from 'mysterium-vpn-js'
 
 class MockHttpAdapter implements HttpInterface {
   mockError: ?Error = null
   mockResponse: any = null
 
   lastPath: ?string = null
-  lastQuery: ?HttpQueryParams = null
+  lastQuery: ?HttpQuery = null
   lastData: mixed = null
   lastTimeout: ?number = null
 
-  async get (path: string, query: ?HttpQueryParams, timeout: ?number): Promise<?any> {
+  async get (path: string, query: ?HttpQuery, timeout: ?number): Promise<?any> {
     this.lastPath = path
     this.lastQuery = query
     this.lastTimeout = timeout

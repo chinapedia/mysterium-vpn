@@ -31,7 +31,7 @@ import type {
 import type { UserSettings } from '../user-settings/user-settings'
 import { MessageReceiver } from './message-receiver'
 import { MessageSender } from './message-sender'
-import { ServiceStatus } from 'mysterium-vpn-js/lib/models/service-status'
+import { ServiceStatus } from 'mysterium-vpn-js'
 
 export type RendererCommunication = {
   connectionStatusChanged: MessageSender<ConnectionStatusChangeDTO>,
@@ -62,7 +62,7 @@ export type RendererCommunication = {
   userSettingsRequest: MessageSender<void>,
   userSettingsUpdate: MessageSender<UserSettings>,
 
-  providerServiceStatusChanged: MessageSender<ServiceStatus>
+  providerServiceStatusChanged: MessageSender<$Values<typeof ServiceStatus>>
 }
 
 export function buildRendererCommunication (messageBus: MessageBus): RendererCommunication {

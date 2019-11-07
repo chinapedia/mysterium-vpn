@@ -17,14 +17,13 @@
 
 // @flow
 import type from '../types'
-import type { IdentityDTO } from 'mysterium-tequilapi/lib/dto/identity'
-import type { IdentityRegistrationDTO } from 'mysterium-tequilapi/lib/dto/identity-registration/identity-registration'
+import type { Identity, IdentityRegistration } from 'mysterium-vpn-js'
 import logger from '../../../app/logger'
 import IdentityManager from '../../../app/identity-manager'
 
 type State = {
-  current: ?IdentityDTO,
-  registration: ?IdentityRegistrationDTO
+  current: ?Identity,
+  registration: ?IdentityRegistration
 }
 
 function stateFactory (): State {
@@ -37,10 +36,10 @@ function stateFactory (): State {
 function actionsFactory () {
   return {
     startObserving ({ commit }: { commit: Function }, identityManager: IdentityManager) {
-      identityManager.onCurrentIdentityChange((newIdentity: IdentityDTO) => {
+      identityManager.onCurrentIdentityChange((newIdentity: Identity) => {
         commit(type.SET_CURRENT_IDENTITY, newIdentity)
       })
-      identityManager.onRegistrationChange((newRegistration: IdentityRegistrationDTO) => {
+      identityManager.onRegistrationChange((newRegistration: IdentityRegistration) => {
         commit(type.SET_IDENTITY_REGISTRATION, newRegistration)
       })
     }
@@ -49,10 +48,10 @@ function actionsFactory () {
 
 function mutationsFactory () {
   return {
-    [type.SET_CURRENT_IDENTITY] (state, identity: IdentityDTO) {
+    [type.SET_CURRENT_IDENTITY] (state, identity: Identity) {
       state.current = identity
     },
-    [type.SET_IDENTITY_REGISTRATION]: (state: State, registration: IdentityRegistrationDTO) => {
+    [type.SET_IDENTITY_REGISTRATION]: (state: State, registration: IdentityRegistration) => {
       state.registration = registration
     }
   }
@@ -67,7 +66,7 @@ const getters = {
     }
     return identity.id
   },
-  registration (state: State): ?IdentityRegistrationDTO {
+  registration (state: State): ?IdentityRegistration {
     return state.registration
   }
 }

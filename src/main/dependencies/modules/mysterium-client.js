@@ -26,7 +26,7 @@ import type { MysteriumVpnConfig } from '../../../app/mysterium-vpn-config'
 import type { Installer, LogCallback, Process } from '../../../libraries/mysterium-client'
 import type { TailFunction } from '../../../libraries/mysterium-client/client-log-publisher'
 import type { ClientConfig } from '../../../libraries/mysterium-client/config'
-import type { TequilapiClient } from 'mysterium-tequilapi/lib/client'
+import type { TequilapiClient } from 'mysterium-vpn-js'
 
 import ClientLogPublisher from '../../../libraries/mysterium-client/client-log-publisher'
 

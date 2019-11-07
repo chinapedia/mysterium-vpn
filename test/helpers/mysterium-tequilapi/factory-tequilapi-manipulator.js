@@ -17,13 +17,14 @@
 
 // @flow
 
-import TequilapiError from 'mysterium-tequilapi/lib/tequilapi-error'
 import EmptyTequilapiClientMock from '../../unit/renderer/store/modules/empty-tequilapi-client-mock'
-import type { ConnectionStatusDTO } from 'mysterium-tequilapi/lib/dto/connection-status-dto'
-import type { ConnectionIPDTO } from 'mysterium-tequilapi/lib/dto/connection-ip'
-import type { ConnectionStatisticsDTO } from 'mysterium-tequilapi/lib/dto/connection-statistics'
-import { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
-import type { IdentityRegistrationDTO } from 'mysterium-tequilapi/lib/dto/identity-registration/identity-registration'
+import type {
+  ConnectionIp,
+  IdentityRegistration,
+  ConnectionStatistics,
+  ConnectionStatusResponse
+} from 'mysterium-vpn-js'
+import { ConnectionStatus, TequilapiError } from 'mysterium-vpn-js'
 
 function factoryTequilapiManipulator () {
   let statusFail = false
@@ -40,7 +41,7 @@ function factoryTequilapiManipulator () {
   const closedRequestErrorMock = createMockRequestClosedError()
 
   class ConnectionTequilapiClientMock extends EmptyTequilapiClientMock {
-    async connectionCreate (): Promise<ConnectionStatusDTO> {
+    async connectionCreate (): Promise<ConnectionStatusResponse> {
       if (connectFailClosedRequest) {
         throw closedRequestErrorMock
       }
@@ -53,7 +54,7 @@ function factoryTequilapiManipulator () {
       }
     }
 
-    async connectionStatus (): Promise<ConnectionStatusDTO> {
+    async connectionStatus (): Promise<ConnectionStatusResponse> {
       if (statusFail) {
         throw errorMock
       }
@@ -69,7 +70,7 @@ function factoryTequilapiManipulator () {
       }
     }
 
-    async connectionIP (): Promise<ConnectionIPDTO> {
+    async connectionIp (): Promise<ConnectionIp> {
       if (ipTimeout) {
         throw timeoutErrorMock
       }
@@ -81,7 +82,7 @@ function factoryTequilapiManipulator () {
       }
     }
 
-    async connectionStatistics (): Promise<ConnectionStatisticsDTO> {
+    async connectionStatistics (): Promise<ConnectionStatistics> {
       if (statisticsFail) {
         throw errorMock
       }
@@ -92,7 +93,7 @@ function factoryTequilapiManipulator () {
       }
     }
 
-    async identityRegistration (identity: string): Promise<IdentityRegistrationDTO> {
+    async identityRegistration (identity: string): Promise<IdentityRegistration> {
       if (identityRegistrationFail) {
         throw errorMock
       }

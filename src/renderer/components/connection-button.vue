@@ -28,7 +28,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import type from '../store/types'
-import { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
+import { ConnectionStatus } from 'mysterium-vpn-js'
 import messages from '../../app/messages'
 
 export default {

@@ -19,14 +19,13 @@
 
 import type { Country } from '../../app/countries/country'
 import { getCountryLabel } from '../../app/countries/utils'
-import { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
+import { ConnectionStatus, ServiceStatus } from 'mysterium-vpn-js'
 import TrayMenu from './menu'
 import TrayMenuItem from './menu-item'
 import TrayMenuSeparator from './menu-item-separator'
 import translations from './translations'
 import messages from '../../app/messages'
 import type { MainCommunication } from '../../app/communication/main-communication'
-import { ServiceStatus } from 'mysterium-vpn-js/lib/models/service-status'
 
 function getMenuItems (
   appQuit: Function,
@@ -34,8 +33,8 @@ function getMenuItems (
   toggleDevTools: Function,
   communication: MainCommunication,
   countries: Array<Country>,
-  vpnStatus: ConnectionStatus,
-  providerServiceStatus: ServiceStatus
+  vpnStatus: $Values<typeof ConnectionStatus>,
+  providerServiceStatus: $Values<typeof ServiceStatus>
 ) {
   const disconnect = new TrayMenuItem(
     translations.disconnect,
@@ -134,8 +133,8 @@ class TrayMenuBuilder {
   _toggleDevTools: Function
   _communication: MainCommunication
   _countries: Array<Country> = []
-  _connectionStatus: ConnectionStatus
-  _providerServiceStatus: ServiceStatus
+  _connectionStatus: $Values<typeof ConnectionStatus>
+  _providerServiceStatus: $Values<typeof ServiceStatus>
 
   constructor (appQuit: Function, showWindow: Function, toggleDevTools: Function, communication: MainCommunication) {
     this._appQuit = appQuit
@@ -146,19 +145,16 @@ class TrayMenuBuilder {
 
   updateCountries (proposals: Array<Country>): this {
     this._countries = proposals
-
     return this
   }
 
-  updateConnectionStatus (status: ConnectionStatus): this {
+  updateConnectionStatus (status: $Values<typeof ConnectionStatus>): this {
     this._connectionStatus = status
-
     return this
   }
 
-  updateProviderServiceStatus (status: ServiceStatus): this {
+  updateProviderServiceStatus (status: $Values<typeof ServiceStatus>): this {
     this._providerServiceStatus = status
-
     return this
   }
 

@@ -17,9 +17,7 @@
 
 // @flow
 
-import type { IdentityDTO } from 'mysterium-tequilapi/lib/dto/identity'
-import type { IdentityRegistrationDTO } from 'mysterium-tequilapi/lib/dto/identity-registration/identity-registration'
-import type { TequilapiClient } from 'mysterium-tequilapi/lib/client'
+import type { Identity, IdentityRegistration, TequilapiClient } from 'mysterium-vpn-js'
 import messages from './messages'
 import Publisher from '../libraries/publisher'
 
@@ -31,44 +29,44 @@ const PASSWORD = ''
 class IdentityManager {
   _tequilapi: TequilapiClient
 
-  _currentIdentity: ?IdentityDTO = null
-  _registration: ?IdentityRegistrationDTO
+  _currentIdentity: ?Identity = null
+  _registration: ?IdentityRegistration
 
-  _currentIdentityPublisher: Publisher<IdentityDTO> = new Publisher()
-  _registrationPublisher: Publisher<IdentityRegistrationDTO> = new Publisher()
+  _currentIdentityPublisher: Publisher<Identity> = new Publisher()
+  _registrationPublisher: Publisher<IdentityRegistration> = new Publisher()
   _errorMessagePublisher: Publisher<string> = new Publisher()
 
   constructor (tequilapi: TequilapiClient) {
     this._tequilapi = tequilapi
   }
 
-  async listIdentities (): Promise<Array<IdentityDTO>> {
+  async listIdentities (): Promise<Array<Identity>> {
     try {
-      return await this._tequilapi.identitiesList()
+      return await this._tequilapi.identityList()
     } catch (err) {
       this._showErrorMessage(messages.identityListFailed)
       throw err
     }
   }
 
-  get currentIdentity (): ?IdentityDTO {
+  get currentIdentity (): ?Identity {
     return this._currentIdentity
   }
 
-  onCurrentIdentityChange (callback: IdentityDTO => void) {
+  onCurrentIdentityChange (callback: Identity => void) {
     this._currentIdentityPublisher.addSubscriber(callback)
   }
 
-  setRegistration (registration: IdentityRegistrationDTO) {
+  setRegistration (registration: IdentityRegistration) {
     this._registration = registration
     this._registrationPublisher.publish(registration)
   }
 
-  onRegistrationChange (subscriber: IdentityRegistrationDTO => any) {
+  onRegistrationChange (subscriber: IdentityRegistration => any) {
     this._registrationPublisher.addSubscriber(subscriber)
   }
 
-  async createIdentity (): Promise<IdentityDTO> {
+  async createIdentity (): Promise<Identity> {
     try {
       return await this._tequilapi.identityCreate(PASSWORD)
     } catch (err) {
@@ -77,7 +75,7 @@ class IdentityManager {
     }
   }
 
-  async unlockIdentity (identity: IdentityDTO): Promise<void> {
+  async unlockIdentity (identity: Identity): Promise<void> {
     if (!identity.id) {
       const message = 'Cannot unlock invalid identity'
       this._showErrorMessage(message)
@@ -115,7 +113,7 @@ class IdentityManager {
     this._errorMessagePublisher.addSubscriber(callback)
   }
 
-  _setCurrentIdentity (identity: IdentityDTO) {
+  _setCurrentIdentity (identity: Identity) {
     this._currentIdentity = identity
     this._currentIdentityPublisher.publish(identity)
   }

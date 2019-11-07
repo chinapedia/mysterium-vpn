@@ -17,21 +17,21 @@
 
 // @flow
 
-import type { ProposalDTO } from 'mysterium-tequilapi/lib/dto/proposal'
 import type { FavoriteProviders } from '../user-settings/user-settings'
 import type { Country } from './country'
+import type { Proposal } from 'mysterium-vpn-js'
 import { QualityCalculator, Metrics } from 'mysterium-vpn-js'
 import countries from './list'
 import { COUNTRY_NAME_UNRESOLVED, isCountryKnown } from './utils'
 
 function getSortedCountryListFromProposals (
-  proposals: Array<ProposalDTO>,
+  proposals: Array<Proposal>,
   favorites: FavoriteProviders): Array<Country> {
   const countries = proposals.map(getCountryFromProposal).map(countryFavoriteMapper(favorites))
   return countries.sort(compareCountries)
 }
 
-function getCountryFromProposal (proposal: ProposalDTO): Country {
+function getCountryFromProposal (proposal: Proposal): Country {
   const calculator = new QualityCalculator()
   const quality = calculator.calculateValue(getMetrics(proposal))
   const qualityLevel = calculator.calculateLevel(quality)
@@ -88,7 +88,7 @@ function compareCountries (a: Country, b: Country) {
   return 0
 }
 
-function getCountryNameFromProposal (proposal: ProposalDTO): ?string {
+function getCountryNameFromProposal (proposal: Proposal): ?string {
   const countryCode = getCountryCodeFromProposal(proposal)
   if (!countryCode) {
     return null
@@ -106,7 +106,7 @@ function getCountryName (countryCode: string): ?string {
   return countries[countryCode]
 }
 
-function getCountryCodeFromProposal (proposal: ProposalDTO): ?string {
+function getCountryCodeFromProposal (proposal: Proposal): ?string {
   if (proposal.serviceDefinition == null) {
     return null
   }
@@ -120,7 +120,7 @@ function getCountryCodeFromProposal (proposal: ProposalDTO): ?string {
   return proposal.serviceDefinition.locationOriginate.country
 }
 
-function getMetrics (proposal: ProposalDTO): Metrics {
+function getMetrics (proposal: Proposal): Metrics {
   if (!proposal.metrics || !proposal.metrics.connectCount) {
     return { connectCount: { success: 0, fail: 0, timeout: 0 } }
   }

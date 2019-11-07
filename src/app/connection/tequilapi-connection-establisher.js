@@ -19,17 +19,15 @@
 
 import type { EventSender } from '../statistics/event-sender'
 import type { BugReporter } from '../bug-reporting/interface'
-import type { TequilapiClient } from 'mysterium-tequilapi/lib/client'
+import type { TequilapiClient, ConnectionRequest, ConsumerLocation } from 'mysterium-vpn-js'
+import { ConnectionStatus } from 'mysterium-vpn-js'
 import type { ConnectDetails } from '../statistics/events-connection'
 import { ConnectEventTracker, currentUserTime } from '../statistics/events-connection'
-import { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
 import messages from '../messages'
 import logger from '../logger'
 import type { ConnectionEstablisher } from './connection-establisher'
-import type { ConnectionRequest } from 'mysterium-tequilapi/lib/dto/query/connection-request'
 import { FunctionLooper } from '../../libraries/function-looper'
 import type { ErrorMessage } from './error-message'
-import type { ConsumerLocationDTO } from 'mysterium-tequilapi/lib/dto/consumer-location'
 import type { ConnectionState } from './connection-state'
 import type { ConnectionStatsFetcher } from './connection-stats-fetcher'
 import type { Provider } from './provider'
@@ -56,7 +54,7 @@ class TequilapiConnectionEstablisher implements ConnectionEstablisher {
     provider: Provider,
     connectionState: ConnectionState,
     errorMessage: ErrorMessage,
-    location: ?ConsumerLocationDTO,
+    location: ?ConsumerLocation,
     actionLooper: ?FunctionLooper) {
     const eventTracker = new ConnectEventTracker(this._eventSender, currentUserTime)
     const connectDetails: ConnectDetails = {
@@ -122,7 +120,7 @@ class TequilapiConnectionEstablisher implements ConnectionEstablisher {
     }
   }
 
-  _getOriginalCountry (location: ?ConsumerLocationDTO): ?string {
+  _getOriginalCountry (location: ?ConsumerLocation): ?string {
     if (location == null || location.country == null) {
       return null
     }

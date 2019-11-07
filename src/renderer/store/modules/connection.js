@@ -20,10 +20,8 @@ import type from '../types'
 
 import { FunctionLooper } from '../../../libraries/function-looper'
 import config from '@/config'
-import type { TequilapiClient } from 'mysterium-tequilapi/lib/client'
-import { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
-import type { ConnectionStatisticsDTO } from 'mysterium-tequilapi/lib/dto/connection-statistics'
-import type { ConsumerLocationDTO } from 'mysterium-tequilapi/lib/dto/consumer-location'
+import type { TequilapiClient, ConsumerLocation, ConnectionStatistics } from 'mysterium-vpn-js'
+import { ConnectionStatus } from 'mysterium-vpn-js'
 import type { BugReporter } from '../../../app/bug-reporting/interface'
 import logger from '../../../app/logger'
 import type { ConnectionEstablisher } from '../../../app/connection/connection-establisher'
@@ -36,8 +34,8 @@ import type { RendererCommunication } from '../../../app/communication/renderer-
 
 type ConnectionStore = {
   ip?: ?string,
-  location?: ?ConsumerLocationDTO,
-  status: ConnectionStatus,
+  location?: ?ConsumerLocation,
+  status: $Values<typeof ConnectionStatus>,
   statistics: Object,
   lastConnectionProvider?: ?Provider,
   actionLoopers: { [string]: FunctionLooper }
@@ -80,7 +78,7 @@ const getters = {
   lastConnectionAttemptProvider (state: ConnectionStore): ?Provider {
     return state.lastConnectionProvider
   },
-  status (state: ConnectionStore): ConnectionStatus {
+  status (state: ConnectionStore): $Values<typeof ConnectionStatus> {
     return state.status
   },
   connection (state: ConnectionStore): ConnectionStore {
@@ -89,22 +87,22 @@ const getters = {
   ip (state: ConnectionStore): ?string {
     return state.ip
   },
-  location (state: ConnectionStore): ?ConsumerLocationDTO {
+  location (state: ConnectionStore): ?ConsumerLocation {
     return state.location
   }
 }
 
 const mutations = {
-  [type.SET_CONNECTION_STATUS] (state: ConnectionStore, status: ConnectionStatus) {
+  [type.SET_CONNECTION_STATUS] (state: ConnectionStore, status: $Values<typeof ConnectionStatus>) {
     state.status = status
   },
-  [type.CONNECTION_STATISTICS] (state: ConnectionStore, statistics: ConnectionStatisticsDTO) {
+  [type.CONNECTION_STATISTICS] (state: ConnectionStore, statistics: ConnectionStatistics) {
     state.statistics = statistics
   },
   [type.CONNECTION_IP] (state: ConnectionStore, ip: string) {
     state.ip = ip
   },
-  [type.LOCATION] (state: ConnectionStore, location: ConsumerLocationDTO) {
+  [type.LOCATION] (state: ConnectionStore, location: ConsumerLocation) {
     state.location = location
   },
   [type.CONNECTION_STATISTICS_RESET] (state: ConnectionStore) {
@@ -141,7 +139,7 @@ function actionsFactory (
     },
     async [type.CONNECTION_IP] ({ commit }) {
       try {
-        const ipModel = await tequilapi.connectionIP(config.ipUpdateTimeout)
+        const ipModel = await tequilapi.connectionIp(config.ipUpdateTimeout)
         commit(type.CONNECTION_IP, ipModel.ip)
       } catch (err) {
         if (err.isTequilapiError) {
@@ -182,7 +180,7 @@ function actionsFactory (
         commit(type.SHOW_ERROR_MESSAGE, messages.connectionStatusFailed)
       }
     },
-    async [type.SET_CONNECTION_STATUS] ({ commit, dispatch, state }, newStatus: ConnectionStatus) {
+    async [type.SET_CONNECTION_STATUS] ({ commit, dispatch, state }, newStatus: $Values<typeof ConnectionStatus>) {
       const oldStatus = state.status
       if (oldStatus === newStatus) {
         return
@@ -290,7 +288,7 @@ class VueConnectionState extends VueAction implements ConnectionState {
     this._commit(type.SET_LAST_CONNECTION_PROVIDER, provider)
   }
 
-  async setConnectionStatus (status: ConnectionStatus) {
+  async setConnectionStatus (status: $Values<typeof ConnectionStatus>) {
     await this._dispatch(type.SET_CONNECTION_STATUS, status)
   }
 

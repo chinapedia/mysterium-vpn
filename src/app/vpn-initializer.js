@@ -17,9 +17,8 @@
 
 // @flow
 
-import type { IdentityDTO } from 'mysterium-tequilapi/lib/dto/identity'
+import type { Identity, TequilapiClient } from 'mysterium-vpn-js'
 import IdentityManager from './identity-manager'
-import type { TequilapiClient } from 'mysterium-tequilapi/lib/client'
 
 /**
  * Creates or re-uses identity and unlocks it for future operations requiring identity.
@@ -42,7 +41,7 @@ class VpnInitializer {
     await identityManager.unlockIdentity(identity)
   }
 
-  async _getFirstOrCreateIdentity (identityManager: IdentityManager): Promise<IdentityDTO> {
+  async _getFirstOrCreateIdentity (identityManager: IdentityManager): Promise<Identity> {
     const identities = await identityManager.listIdentities()
 
     if (identities && identities.length > 0) {

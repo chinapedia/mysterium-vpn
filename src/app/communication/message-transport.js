@@ -32,7 +32,7 @@ import messages from './messages'
 import type { UserSettings } from '../user-settings/user-settings'
 import { MessageReceiver } from './message-receiver'
 import { MessageSender } from './message-sender'
-import { ServiceStatus } from 'mysterium-vpn-js/lib/models/service-status'
+import { ServiceStatus } from 'mysterium-vpn-js'
 
 /**
  * Allows building message sender and receiver.
@@ -88,7 +88,7 @@ export function buildMessageTransports (messageBus: MessageBus) {
   const userSettingsRequest: MessageTransport<void> = build(messages.USER_SETTINGS_REQUEST)
   const userSettingsUpdate: MessageTransport<UserSettings> = build(messages.USER_SETTINGS_UPDATE)
 
-  const providerServiceStatusChanged: MessageTransport<ServiceStatus> =
+  const providerServiceStatusChanged: MessageTransport<$Values<typeof ServiceStatus>> =
     build(messages.PROVIDER_SERVICE_STATUS_CHANGED)
 
   return {

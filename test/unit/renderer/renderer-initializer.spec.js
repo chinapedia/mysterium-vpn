@@ -24,7 +24,7 @@ import BugReporterMock from '../../helpers/bug-reporter-mock'
 import EmptyTequilapiClientMock from './store/modules/empty-tequilapi-client-mock'
 import TequilapiRegistrationFetcher from '../../../src/app/data-fetchers/tequilapi-registration-fetcher'
 import IdentityManager from '../../../src/app/identity-manager'
-import type { IdentityRegistrationDTO } from 'mysterium-tequilapi/lib/dto/identity-registration/identity-registration'
+import type { IdentityRegistration } from 'mysterium-vpn-js'
 import { expect } from '../../helpers/dependencies'
 import { nextTick } from '../../helpers/utils'
 
@@ -34,9 +34,9 @@ class MockStore {
 }
 
 class InitializerTequilapiClientMock extends EmptyTequilapiClientMock {
-  mockRegistration: IdentityRegistrationDTO = { registered: true }
+  mockRegistration: IdentityRegistration = { registered: true }
 
-  async identityRegistration (id: string): Promise<IdentityRegistrationDTO> {
+  async identityRegistration (id: string): Promise<IdentityRegistration> {
     return this.mockRegistration
   }
 }

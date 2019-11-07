@@ -30,7 +30,7 @@ import identityStoreFactory from '../../../../src/renderer/store/modules/identit
 import types from '../../../../src/renderer/store/types'
 import MockEventSender from '../../../helpers/statistics/mock-event-sender'
 import FeatureToggle from '../../../../src/app/features/feature-toggle'
-import type { IdentityDTO } from 'mysterium-tequilapi/lib/dto/identity'
+import type { Identity } from 'mysterium-vpn-js'
 import IdentityManager from '../../../../src/app/identity-manager'
 import BugReporterMock from '../../../helpers/bug-reporter-mock'
 
@@ -39,7 +39,7 @@ describe('IdentityMenu', () => {
   let wrapper: IdentityMenu
   let store: Vuex.Store
 
-  function mountEverything (currentIdentity: ?IdentityDTO) {
+  function mountEverything (currentIdentity: ?Identity) {
     const vm = createLocalVue()
     vm.use(Vuex)
 

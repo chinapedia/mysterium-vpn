@@ -17,17 +17,16 @@
 
 // @flow
 
-import type { TequilapiClient } from 'mysterium-tequilapi/lib/client'
+import type { TequilapiClient, IdentityRegistration } from 'mysterium-vpn-js'
 import { FunctionLooper } from '../../libraries/function-looper'
 import type { Subscriber } from '../../libraries/publisher'
 import Publisher from '../../libraries/publisher'
 import type { RegistrationFetcher } from './registration-fetcher'
-import type { IdentityRegistrationDTO } from 'mysterium-tequilapi/lib/dto/identity-registration/identity-registration'
 
 class TequilapiRegistrationFetcher implements RegistrationFetcher {
   _api: TequilapiClient
   _loop: FunctionLooper
-  _registrationPublisher: Publisher<IdentityRegistrationDTO> = new Publisher()
+  _registrationPublisher: Publisher<IdentityRegistration> = new Publisher()
   _errorPublisher: Publisher<Error> = new Publisher()
   _identityId: string
 
@@ -55,7 +54,7 @@ class TequilapiRegistrationFetcher implements RegistrationFetcher {
   /**
    * Forces proposals to be fetched without delaying.
    */
-  async fetch (): Promise<IdentityRegistrationDTO> {
+  async fetch (): Promise<IdentityRegistration> {
     const registration = await this._api.identityRegistration(this._identityId)
 
     this._registrationPublisher.publish(registration)
@@ -67,7 +66,7 @@ class TequilapiRegistrationFetcher implements RegistrationFetcher {
     await this._loop.stop()
   }
 
-  onFetchedRegistration (subscriber: Subscriber<IdentityRegistrationDTO>): void {
+  onFetchedRegistration (subscriber: Subscriber<IdentityRegistration>): void {
     this._registrationPublisher.addSubscriber(subscriber)
   }
 

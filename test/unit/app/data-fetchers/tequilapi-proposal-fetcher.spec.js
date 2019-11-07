@@ -19,23 +19,23 @@
 import { describe, it, expect, before, beforeEach, after } from '../../../helpers/dependencies'
 import lolex from 'lolex'
 import TequilapiProposalFetcher from '../../../../src/app/data-fetchers/tequilapi-proposal-fetcher'
-import type { ProposalDTO } from 'mysterium-tequilapi/lib/dto/proposal'
-import { parseProposalDTO } from 'mysterium-tequilapi/lib/dto/proposal'
+import type { Proposal } from 'mysterium-vpn-js'
+import { parseProposal } from 'mysterium-vpn-js'
 import { nextTick } from '../../../helpers/utils'
 import EmptyTequilapiClientMock from '../../renderer/store/modules/empty-tequilapi-client-mock'
 import logger from '../../../../src/app/logger'
 
 class IdentityTequilapiClientMock extends EmptyTequilapiClientMock {
   mockError: Error = new Error('Mock error')
-  _proposals: Array<ProposalDTO>
+  _proposals: Array<Proposal>
   _willFail: boolean = false
 
-  constructor (proposals: Array<ProposalDTO>) {
+  constructor (proposals: Array<Proposal>) {
     super()
     this._proposals = proposals
   }
 
-  async findProposals (_query): Promise<Array<ProposalDTO>> {
+  async findProposals (_query): Promise<Array<Proposal>> {
     if (this._willFail) {
       throw this.mockError
     }
@@ -55,13 +55,13 @@ describe('TequilapiProposalFetcher', () => {
   let clock
   const interval = 1001
   const tequilapi = new IdentityTequilapiClientMock([
-    parseProposalDTO({
+    parseProposal({
       id: 1,
       providerId: '0x1',
       serviceType: 'openvpn',
       serviceDefinition: {}
     }),
-    parseProposalDTO({
+    parseProposal({
       id: 1,
       providerId: '0x2',
       serviceType: 'openvpn',
@@ -117,15 +117,13 @@ describe('TequilapiProposalFetcher', () => {
         id: 1,
         providerId: '0x1',
         serviceType: 'openvpn',
-        serviceDefinition: { locationOriginate: undefined },
-        metrics: undefined
+        serviceDefinition: { }
       })
       expect(proposals[1]).to.deep.equal({
         id: 1,
         providerId: '0x2',
         serviceType: 'openvpn',
-        serviceDefinition: { locationOriginate: undefined },
-        metrics: undefined
+        serviceDefinition: { }
       })
     })
 
@@ -184,15 +182,13 @@ describe('TequilapiProposalFetcher', () => {
         id: 1,
         providerId: '0x1',
         serviceType: 'openvpn',
-        serviceDefinition: { locationOriginate: undefined },
-        metrics: undefined
+        serviceDefinition: {}
       })
       expect(proposals[1]).to.deep.equal({
         id: 1,
         providerId: '0x2',
         serviceType: 'openvpn',
-        serviceDefinition: { locationOriginate: undefined },
-        metrics: undefined
+        serviceDefinition: {}
       })
     })
   })

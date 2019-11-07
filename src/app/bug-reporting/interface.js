@@ -17,10 +17,10 @@
 
 // @flow
 
-import type { IdentityDTO } from 'mysterium-tequilapi/lib/dto/identity'
+import type { Identity } from 'mysterium-vpn-js'
 
 export interface BugReporter {
-  setUser (IdentityDTO): void,
+  setUser (Identity): void,
   captureErrorMessage (message: string, context?: any): void,
   captureInfoMessage (message: string, context?: any): void,
   captureErrorException (err: Error, context?: any): void,

@@ -26,7 +26,7 @@ import messages from '../../../src/app/communication/messages'
 import BugReporterMock from '../../helpers/bug-reporter-mock'
 import { UserSettingsStorage } from '../../../src/app/user-settings/user-settings-storage'
 import Notification from '../../../src/app/notification'
-import { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
+import { ConnectionStatus } from 'mysterium-vpn-js'
 import { buildMainCommunication } from '../../../src/app/communication/main-communication'
 
 class UserSettingsStoreMock extends UserSettingsStorage {

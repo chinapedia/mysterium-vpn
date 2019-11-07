@@ -18,7 +18,7 @@
 // @flow
 import type { BugReporter } from './interface'
 import Raven from 'raven'
-import { IdentityDTO } from 'mysterium-tequilapi/lib/dto/identity'
+import { Identity } from 'mysterium-vpn-js'
 import logger from '../logger'
 
 class BugReporterRenderer implements BugReporter {
@@ -28,7 +28,7 @@ class BugReporterRenderer implements BugReporter {
     this.raven = raven
   }
 
-  setUser (userData: IdentityDTO) {
+  setUser (userData: Identity) {
     this.raven.setUserContext(userData)
   }
 

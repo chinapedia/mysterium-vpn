@@ -23,7 +23,7 @@ import ServiceManagerProcess
   from '../../../../../src/libraries/mysterium-client/service-manager/service-manager-process'
 import EmptyTequilapiClientMock from '../../../renderer/store/modules/empty-tequilapi-client-mock'
 import SystemMock from '../../../../helpers/system-mock'
-import type { NodeHealthcheckDTO } from 'mysterium-tequilapi/lib/dto/node-healthcheck'
+import type { NodeHealthcheck } from 'mysterium-vpn-js'
 import ClientLogPublisher from '../../../../../src/libraries/mysterium-client/client-log-publisher'
 import type { LogCallback } from '../../../../../src/libraries/mysterium-client'
 import type { SystemMockManager } from '../../../../helpers/system-mock'
@@ -70,7 +70,7 @@ class TequilapiMock extends EmptyTequilapiClientMock {
     this.cancelIsCalled = true
   }
 
-  async healthCheck (_timeout: ?number): Promise<NodeHealthcheckDTO> {
+  async healthCheck (_timeout: ?number): Promise<NodeHealthcheck> {
     this.healthCheckIsCalled = true
     if (this.healthCheckThrowsError) {
       throw new Error('HEALTHCHECK_TEST_ERROR')

@@ -17,7 +17,7 @@
 
 // @flow
 
-import type { TequilapiClient } from 'mysterium-tequilapi/lib/client'
+import type { TequilapiClient } from 'mysterium-vpn-js'
 import { TequilapiStatusNotifier } from './tequilapi-status-notifier'
 import { promisify } from 'util'
 import Monitoring from './monitoring'

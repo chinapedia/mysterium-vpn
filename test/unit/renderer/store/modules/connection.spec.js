@@ -22,16 +22,15 @@ import type from '@/store/types'
 import mainFactory, { ActionLooper, ActionLooperConfig } from '@/store/modules/connection'
 import { describe, it, beforeEach } from '../../../../helpers/dependencies'
 import { FunctionLooper } from '@/../libraries/function-looper'
-import { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
+import { ConnectionStatus } from 'mysterium-vpn-js'
+import type { ConsumerLocation, ConnectionStatistics } from 'mysterium-vpn-js'
 import communicationMessages from '@/../app/communication/messages'
 import FakeMessageBus from '../../../../helpers/fake-message-bus'
 import type { ConnectionStore } from '../../../../../src/renderer/store/modules/connection'
-import type { ConnectionStatisticsDTO } from 'mysterium-tequilapi/lib/dto/connection-statistics'
 import BugReporterMock from '../../../../helpers/bug-reporter-mock'
 import factoryTequilapiManipulator from '../../../../helpers/mysterium-tequilapi/factory-tequilapi-manipulator'
 import type { ConnectionEstablisher } from '../../../../../src/app/connection/connection-establisher'
 import type { ErrorMessage } from '../../../../../src/app/connection/error-message'
-import type { ConsumerLocationDTO } from 'mysterium-tequilapi/lib/dto/consumer-location'
 import type { ConnectionState } from '../../../../../src/app/connection/connection-state'
 import type { ConnectionStatsFetcher } from '../../../../../src/app/connection/connection-stats-fetcher'
 import type { Provider } from '../../../../../src/app/connection/provider'
@@ -44,7 +43,7 @@ type ConnectParams = {
   provider: Provider,
   connectionState: ConnectionState,
   errorMessage: ErrorMessage,
-  location: ?ConsumerLocationDTO,
+  location: ?ConsumerLocation,
   actionLooper: ?FunctionLooper
 }
 
@@ -64,7 +63,7 @@ class MockConnectionEstablisher implements ConnectionEstablisher {
     provider: Provider,
     connectionState: ConnectionState,
     errorMessage: ErrorMessage,
-    location: ?ConsumerLocationDTO,
+    location: ?ConsumerLocation,
     actionLooper: ?FunctionLooper): Promise<void> {
     this.connectParams = { consumerId, provider, connectionState, errorMessage, location, actionLooper }
   }
@@ -152,7 +151,7 @@ describe('connection', () => {
           statistics: {},
           actionLoopers: {}
         }
-        const stats: ConnectionStatisticsDTO = {
+        const stats: ConnectionStatistics = {
           duration: 13320,
           bytesReceived: 0,
           bytesSent: 0
@@ -530,8 +529,8 @@ describe('connection', () => {
 
     describe('RECONNECT', () => {
       it('invokes connection establisher with last connection provider', async () => {
-        const location: ConsumerLocationDTO = {
-          asn: '123'
+        const location: ConsumerLocation = {
+          asn: 123
         }
         const state: ConnectionStore = {
           status: ConnectionStatus.CONNECTED,
@@ -569,7 +568,7 @@ describe('connection', () => {
             [type.FETCH_CONNECTION_STATUS]: new FunctionLooper(async () => {}, 1000)
           },
           location: {
-            asn: '123'
+            asn: 123
           }
         }
         const getters = {
@@ -588,8 +587,8 @@ describe('connection', () => {
 
     describe('CONNECT', () => {
       it('invokes connection establisher with given provider', async () => {
-        const location: ConsumerLocationDTO = {
-          asn: '123'
+        const location: ConsumerLocation = {
+          asn: 123
         }
         const state = {
           status: ConnectionStatus.CONNECTED,

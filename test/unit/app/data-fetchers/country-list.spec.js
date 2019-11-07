@@ -17,8 +17,7 @@
 
 // @flow
 import type { ProposalFetcher } from '../../../../src/app/data-fetchers/proposal-fetcher'
-import type { ProposalDTO } from 'mysterium-tequilapi/lib/dto/proposal'
-import { parseProposalDTO } from 'mysterium-tequilapi/lib/dto/proposal'
+import type { Proposal } from 'mysterium-vpn-js'
 import type { Subscriber } from '../../../../src/libraries/publisher'
 import { afterEach, beforeEach, describe, expect, it } from '../../../helpers/dependencies'
 import CountryList from '../../../../src/app/data-fetchers/country-list'
@@ -26,22 +25,22 @@ import { UserSettingsStorage } from '../../../../src/app/user-settings/user-sett
 import { RepeatableCallbackRecorder } from '../../../helpers/utils'
 import { unlinkSyncIfPresent } from '../../../helpers/file-system'
 import type { UserSettingsStore } from '../../../../src/app/user-settings/user-settings-store'
-import { QualityLevel } from 'mysterium-vpn-js'
+import { QualityLevel, parseProposal } from 'mysterium-vpn-js'
 
 class ProposalFetcherMock implements ProposalFetcher {
-  _subscriber: Subscriber<ProposalDTO[]>
-  _data: ProposalDTO[]
+  _subscriber: Subscriber<Proposal[]>
+  _data: Proposal[]
 
-  async fetch (): Promise<Array<ProposalDTO>> {
+  async fetch (): Promise<Array<Proposal>> {
     this._subscriber(this._data)
     return this._data
   }
 
-  onFetchedProposals (cb: Subscriber<ProposalDTO[]>) {
+  onFetchedProposals (cb: Subscriber<Proposal[]>) {
     this._subscriber = cb
   }
 
-  setFetchData (data: ProposalDTO[]) {
+  setFetchData (data: Proposal[]) {
     this._data = data
   }
 }
@@ -52,14 +51,14 @@ describe('CountryList', () => {
   const settingsPath = 'settings.json'
   const store: UserSettingsStore = new UserSettingsStorage(settingsPath)
 
-  const proposal1 = [parseProposalDTO({
+  const proposal1 = [parseProposal({
     id: 1,
     providerId: '0x1',
     serviceType: 'mock',
     serviceDefinition: { locationOriginate: { country: 'lt' } },
     metrics: { connectCount: { success: 0, fail: 10, timeout: 50 } }
   })]
-  const proposal2 = [parseProposalDTO({
+  const proposal2 = [parseProposal({
     id: 2,
     providerId: '0x2',
     serviceType: 'mock',

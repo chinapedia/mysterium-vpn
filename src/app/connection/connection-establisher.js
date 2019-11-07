@@ -18,7 +18,7 @@
 // @flow
 
 import type { ErrorMessage } from './error-message'
-import type { ConsumerLocationDTO } from 'mysterium-tequilapi/lib/dto/consumer-location'
+import type { ConsumerLocation } from 'mysterium-vpn-js'
 import { FunctionLooper } from '../../libraries/function-looper'
 import type { ConnectionState } from './connection-state'
 import type { ConnectionStatsFetcher } from './connection-stats-fetcher'
@@ -30,7 +30,7 @@ interface ConnectionEstablisher {
     provider: Provider,
     connectionState: ConnectionState,
     errorMessage: ErrorMessage,
-    location: ?ConsumerLocationDTO,
+    location: ?ConsumerLocation,
     actionLooper: ?FunctionLooper): Promise<void>,
   disconnect (
     connectionState: ConnectionState,

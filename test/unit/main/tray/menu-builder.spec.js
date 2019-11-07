@@ -17,7 +17,6 @@
 
 // @flow
 import TrayMenuBuilder from '../../../../src/main/tray/menu-builder'
-import { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
 import translations from '../../../../src/main/tray/translations'
 import { describe, it, expect, beforeEach } from '../../../helpers/dependencies'
 import { buildMainCommunication } from '../../../../src/app/communication/main-communication'
@@ -25,7 +24,7 @@ import DirectMessageBus from '../../../helpers/direct-message-bus'
 import { buildRendererCommunication } from '../../../../src/app/communication/renderer-communication'
 import { CallbackRecorder } from '../../../helpers/utils'
 import type { MessageReceiver } from '../../../../src/app/communication/message-receiver'
-import { QualityLevel } from 'mysterium-vpn-js'
+import { QualityLevel, ConnectionStatus } from 'mysterium-vpn-js'
 
 class FakeApplicationQuitter {
   didQuit: boolean = false
