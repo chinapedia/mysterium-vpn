@@ -1,6 +1,6 @@
 {
   "name": "MysteriumVPN",
-  "version": "0.13.0",
+  "version": "0.14.1.0",
   "author": "Mysterium Network <team@netsys.technology>",
   "description": "Mysterium VPN is a desktop application for accessing Mysterium Network - decentralized VPN built on blockchain.",
   "license": "GPL-3.0",
@@ -117,7 +117,7 @@
     "less-loader": "^4.1.0",
     "lolex": "^2.7.4",
     "md5": "^2.2.1",
-    "mysterium-client-bin": "0.13.2",
+    "mysterium-client-bin": "0.14.1",
     "mysterium-vpn-js": "^1.0.9",
     "node-zip": "^1.1.1",
     "os-name": "^2.0.1",
