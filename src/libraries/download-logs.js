@@ -26,6 +26,7 @@ export default async function downloadLogs (window, logDir) {
   let zip = new NodeZip()
   zip.file('stdout.log', fs.readFileSync(path.join(logDir, 'stdout.log')))
   zip.file('stderr.log', fs.readFileSync(path.join(logDir, 'stderr.log')))
+  zip.file('mysterium-node.log', fs.readFileSync(path.join(logDir, 'mysterium-node.log')))
 
   const content = await zip.generate({ base64: false, compression: 'DEFLATE' })
   fs.writeFileSync(zipPath, content, 'binary')
