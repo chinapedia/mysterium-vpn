@@ -213,6 +213,9 @@ export default {
   computed: {
     ...mapGetters(['ip', 'location', 'errorMessage', 'showError', 'currentIdentity']),
     ipType () {
+      if (!this.location) {
+        return 'N/A'
+      }
       switch (this.location.node_type) {
         case 'residential':
           return 'Residential'
@@ -277,22 +280,25 @@ export default {
       }
     },
     buttonText () {
-      if (this.pendingStartRequest) {
-        return 'Starting..'
-      }
-
       if (this.pendingStopRequest) {
         return 'Stopping..'
       }
 
+      const starting = 'Starting..'
       const notRunning = 'Start service'
       const running = 'Stop service'
+
+      if (this.pendingStartRequest) {
+        return starting
+      }
 
       switch (this.status) {
         case ServiceStatus.NOT_RUNNING:
           return notRunning
         case ServiceStatus.RUNNING:
           return running
+        case ServiceStatus.STARTING:
+          return starting
         default:
           const msg = `Unknown status value: ${this.status}`
           logger.error(msg)
@@ -426,7 +432,7 @@ export default {
     startNatStatusFetching () {
       const fetch = async () => {
         try {
-          const status = await this.tequilapiClient.NatStatus()
+          const status = await this.tequilapiClient.natStatus()
 
           this.NatStatus = status
         } catch (e) {
